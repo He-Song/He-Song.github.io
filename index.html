@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next muse use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -56,10 +56,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/s_lowercase_32px_1168328_easyicon.net.png?v=5.1.4">
 
 
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/s_lowercase_16px_1168328_easyicon.net.png?v=5.1.4">
 
 
   <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
@@ -79,10 +79,12 @@
 
 
 
+<meta name="description" content="放弃不难,但坚持一定很酷">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Mr.Hee の BLOG">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Mr.Hee の BLOG">
+<meta property="og:description" content="放弃不难,但坚持一定很酷">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 
@@ -92,7 +94,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Muse',
+    scheme: 'Mist',
     version: '5.1.4',
     sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
@@ -120,7 +122,7 @@
 
 
 
-  <title>Hexo</title>
+  <title>Mr.Hee の BLOG</title>
   
 
 
@@ -151,7 +153,7 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">Mr.Hee の BLOG</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -248,6 +250,145 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="hee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.Hee の BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" itemprop="url">高可用性的mongo集群搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-31T00:00:00+08:00">
+                2019-10-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" class="leancloud_visitors" data-flag-title="高可用性的mongo集群搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          mongoDB安装参照：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/
+配置yum管理包
+在路径/etc/yum.repos.d/下创建文件mongodb-org-3.4.repo123456[mongodb-
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/30/test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -257,7 +398,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="Mr.Hee の BLOG">
     </span>
 
     
@@ -297,6 +438,17 @@
 
           
           
+             <span id="/2019/10/30/test/" class="leancloud_visitors" data-flag-title="test">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
 
           
 
@@ -319,8 +471,15 @@
       
         
           
-            
           
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/30/test/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -376,7 +535,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="Mr.Hee の BLOG">
     </span>
 
     
@@ -416,6 +575,17 @@
 
           
           
+             <span id="/2019/10/30/linux/" class="leancloud_visitors" data-flag-title="linux的一些零星记录">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
 
           
 
@@ -438,100 +608,19 @@
       
         
           
-            <h4 id="1-linux忘记root密码"><a href="#1-linux忘记root密码" class="headerlink" title="1.linux忘记root密码"></a>1.linux忘记root密码</h4><p><a href="https://www.cnblogs.com/kerrycode/p/3479925.html" target="_blank" rel="noopener">解决办法</a></p>
-<h4 id="2-java环境变量"><a href="#2-java环境变量" class="headerlink" title="2.java环境变量"></a>2.java环境变量</h4><p>1.编辑系统变量文件：vi /etc/profile</p>
-<pre><code>export JAVA_HOME=/usr/java/jdk1.8.0_151
+          1.linux忘记root密码解决办法
+2.java环境变量1.编辑系统变量文件：vi /etc/profile
+export JAVA_HOME=/usr/java/jdk1.8.0_151
 export JRE_HOME=$JAVA_HOME/jre
-export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib
-export PATH=$JAVA_HOME/bin:$PATH</code></pre><h4 id="3-进程"><a href="#3-进程" class="headerlink" title="3.进程"></a>3.进程</h4><pre><code>netstat -tunlp |grep 22 //查看22端口使用情况</code></pre><h4 id="4-tar解、压缩"><a href="#4-tar解、压缩" class="headerlink" title="4.tar解、压缩"></a>4.tar解、压缩</h4><p>1.tar</p>
-<pre><code>-c: 建立压缩档案
--x：解压
--t：查看内容
--r：向压缩归档文件末尾追加文件
--u：更新原压缩包中的文件</code></pre><p>2.这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。</p>
-<pre><code>-z：有gzip属性的
--j：有bz2属性的
--Z：有compress属性的
--v：显示所有过程
--O：将文件解开到标准输出</code></pre><p>3.下面的参数-f是必须的</p>
-<pre><code>-f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
-# tar -cf all.tar *.jpg
-这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
-# tar -rf all.tar *.gif
-这条命令是将所有.gif的文件增加到all.tar的包里面去。-r是表示增加文件的意思。
-# tar -uf all.tar logo.gif
-这条命令是更新原来tar包all.tar中logo.gif文件，-u是表示更新文件的意思。
-# tar -tf all.tar
-这条命令是列出all.tar包中所有文件，-t是列出文件的意思
-# tar -xf all.tar
-这条命令是解出all.tar包中所有文件，-x是解开的意思</code></pre><p>4.压缩</p>
-<pre><code>tar -cvf jpg.tar *.jpg //将目录里所有jpg文件打包成tar.jpg 
-tar -czf jpg.tar.gz *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用gzip压缩，生成一个gzip压缩过的包，命名为jpg.tar.gz
-tar -cjf jpg.tar.bz2 *.jpg //将目录里所有jpg文件打包成jpg.tar后，并且将其用bzip2压缩，生成一个bzip2压缩过的包，命名为jpg.tar.bz2
-tar -cZf jpg.tar.Z *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用compress压缩，生成一个umcompress压缩过的包，命名为jpg.tar.Z
-rar a jpg.rar *.jpg //rar格式的压缩，需要先下载rar for linux
-zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux</code></pre><p>5.解压</p>
-<pre><code>tar -xvf file.tar //解压 tar包
-tar -xzvf file.tar.gz //解压tar.gz
-tar -xjvf file.tar.bz2   //解压 tar.bz2
-tar -xZvf file.tar.Z   //解压tar.Z
-unrar e file.rar //解压rar
-unzip file.zip //解压zip</code></pre><p>6.总结</p>
-<pre><code>1、*.tar 用 tar -xvf 解压
-2、*.gz 用 gzip -d或者gunzip 解压
-3、*.tar.gz和*.tgz 用 tar -xzf 解压
-4、*.bz2 用 bzip2 -d或者用bunzip2 解压
-5、*.tar.bz2用tar -xjf 解压
-6、*.Z 用 uncompress 解压
-7、*.tar.Z 用tar -xZf 解压
-8、*.rar 用 unrar e解压
-9、*.zip 用 unzip 解压</code></pre><p><a href="http://blog.csdn.net/zhongguozhichuang/article/details/52727745" target="_blank" rel="noopener">http://blog.csdn.net/zhongguozhichuang/article/details/52727745</a></p>
-<h4 id="5-linux下动态查看日志"><a href="#5-linux下动态查看日志" class="headerlink" title="5. linux下动态查看日志"></a>5. linux下动态查看日志</h4><pre><code>tail -f fileName</code></pre><h4 id="6-服务自启动"><a href="#6-服务自启动" class="headerlink" title="6. 服务自启动"></a>6. 服务自启动</h4><pre><code>[root@localhost ~]chkconfig smb on
-#or
-[root@localhost ~]# vi /etc/rc.local
-#!/bin/sh
-#
-# This script will be executed *after* all the other init scripts.
-# You can put your own initialization stuff in here if you don&apos;t
-# want to do the full Sys V style init stuff.
-service smb start</code></pre><h4 id="7-网卡配置"><a href="#7-网卡配置" class="headerlink" title="7.网卡配置"></a>7.网卡配置</h4><pre><code>ifdown eth3 &amp;&amp; ifup eth3
-service network restart</code></pre><h4 id="8-vi编辑器の操作"><a href="#8-vi编辑器の操作" class="headerlink" title="8.vi编辑器の操作"></a>8.vi编辑器の操作</h4><pre><code>a   //在当前字符后添加文本
-A   //在行末添加文本
-i   //在当前字符前插入文本
-I   //在当前行首插入文本
-o   //在当前行后面插入一空行
-O   //在当前行前面插入一空行
-/字符串 //往下查找字符串
-        n   //往下跳到下一个匹配位置
-        N   //往上跳到下一个匹配位置
-?字符串 //往上匹配字符串（与&apos;/字符串&apos;操作相反）
-p   //粘贴文本操作，用于将缓存区的内容粘贴到当前光标所在位置的下方
-P   //粘贴文本操作，用于将缓存区的内容粘贴到当前光标所在位置的上方
-Ctrl+u  //向文件首翻半屏
-Ctrl+d  //向文件尾翻半屏
-Ctrl+f  //向文件尾翻一屏
-Ctrl+b  //向文件首翻一屏；
-Esc     //从编辑模式切换到命令模式；
-ZZ      //命令模式下保存当前文件所做的修改后退出vi；
-:行号   //光标跳转到指定行的行首；
-:$      //光标跳转到最后一行的行首；
-x或X    //删除一个字符，x删除光标后的，而X删除光标前的；
-D       //删除从当前光标到光标所在行尾的全部字符；
-dd      //删除光标行正行内容；
-ndd     //删除当前行及其后n-1行；
-nyy     //当前行及其下n行的内容保存到寄存器？中，其中？为一个字母，n为一个数字；
-gg      //让光标移到首行，在vim才有效，vi中无效
-G       //光标移到最后一行
-V       //是进入Visual(可视）模式
-dG      //全部删除
-ggyG    //全部复制
-ggVG    //全选
-        d       //删除选中
-        y       //复制选中内容到0号寄存器
-&quot;+y     //复制选中内容到＋寄存器，也就是系统的剪贴板，供其他程序用
-gg&quot;+yG  //要复制到别的地方，用 &quot;+y 来复制</code></pre><h4 id="9-时间戳"><a href="#9-时间戳" class="headerlink" title="9.时间戳"></a>9.时间戳</h4><pre><code>date    //获取当前系统时间
-date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 id="10-文件比较之’diff’"><a href="#10-文件比较之’diff’" class="headerlink" title="10.文件比较之’diff’"></a>10.文件比较之’diff’</h4>
-          
+export CLASSPATH=.:$JA
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/30/linux/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -587,7 +676,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="Mr.Hee の BLOG">
     </span>
 
     
@@ -597,7 +686,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/10/29/hello-world/" itemprop="url">Hello World</a></h1>
+                <a class="post-title-link" href="/2019/10/29/hello-world/" itemprop="url">初入Hexo</a></h1>
         
 
         <div class="post-meta">
@@ -627,6 +716,17 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
 
           
           
+             <span id="/2019/10/29/hello-world/" class="leancloud_visitors" data-flag-title="初入Hexo">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
 
           
 
@@ -649,21 +749,15 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
           
+          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/29/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -733,7 +827,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
               <p class="site-author-name" itemprop="name">hee</p>
-              <p class="site-description motion-element" itemprop="description"></p>
+              <p class="site-description motion-element" itemprop="description">放弃不难,但坚持一定很酷</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -743,7 +837,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -756,7 +850,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>
@@ -811,7 +905,7 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
 
 
 
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
 
 
 
@@ -858,6 +952,8 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
   
 
 
+  
+
 
 
 
@@ -896,6 +992,11 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
   
 
 
@@ -948,6 +1049,19 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
 
 
 
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+
+
 
 
 
@@ -960,6 +1074,113 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
 
 
   
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("XLxIUd7wtq0rfXy6FvU9AAY8-gzGzoHsz", "D5YF99tIlrm0klJp14kFeIzC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
 
   
 
@@ -976,3 +1197,6 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
 
 </body>
 </html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
