@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="spark," />
 
 
 
@@ -86,17 +86,20 @@
 
 
 
-<meta name="description" content="下载JDK1.8的安装包–&amp;gt;java官网&amp;lt;– 根据自己的系统版本下载.tar.gz结尾的压缩包， 我这里下载的是 *jdk-8u151-linux-i586.tar.gz** 安装包 解压缩将下载的安装包放到自定义路径下，我这里放到的 &#x2F;opt 下然后就是解压了，linux下的解压命令是 1tar -zxvf jdk-8u151-linux-i586.tar.gz  配置环境变量配置系">
+<meta name="description" content="环境需要 java环境部署 spark环境部署  java环境部署（安装jdk）参考：linux下java环境部署 spark 环境部署spark安装包下载–&amp;gt;spark官网下载地址&amp;lt;–  这里我下载的2.4.4版本:spark-2.4.4-bin-hadoop2.7.tgz 解压缩将下载的tgz包放到自定义路径下，我这里放到的 &#x2F;opt 下然后就是解压了，linux下的解压命令是 1">
+<meta name="keywords" content="spark">
 <meta property="og:type" content="article">
-<meta property="og:title" content="linux下java环境部署">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2&#x2F;index.html">
+<meta property="og:title" content="spark 单机环境搭建">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&#x2F;index.html">
 <meta property="og:site_name" content="Mr.He&#39; BLOG">
-<meta property="og:description" content="下载JDK1.8的安装包–&amp;gt;java官网&amp;lt;– 根据自己的系统版本下载.tar.gz结尾的压缩包， 我这里下载的是 *jdk-8u151-linux-i586.tar.gz** 安装包 解压缩将下载的安装包放到自定义路径下，我这里放到的 &#x2F;opt 下然后就是解压了，linux下的解压命令是 1tar -zxvf jdk-8u151-linux-i586.tar.gz  配置环境变量配置系">
+<meta property="og:description" content="环境需要 java环境部署 spark环境部署  java环境部署（安装jdk）参考：linux下java环境部署 spark 环境部署spark安装包下载–&amp;gt;spark官网下载地址&amp;lt;–  这里我下载的2.4.4版本:spark-2.4.4-bin-hadoop2.7.tgz 解压缩将下载的tgz包放到自定义路径下，我这里放到的 &#x2F;opt 下然后就是解压了，linux下的解压命令是 1">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2&#x2F;%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png">
-<meta property="og:updated_time" content="2019-11-13T05:52:30.616Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&#x2F;spark%E5%AE%98%E7%BD%91.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&#x2F;spark%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&#x2F;spark%E6%B5%8B%E8%AF%95.png">
+<meta property="og:updated_time" content="2019-11-13T07:27:01.705Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2&#x2F;%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;13&#x2F;spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA&#x2F;spark%E5%AE%98%E7%BD%91.png">
 
 
 
@@ -126,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/11/13/linux下java环境部署/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/11/13/spark-单机环境搭建/"/>
 
 
 
 
 
-  <title>linux下java环境部署 | Mr.He' BLOG</title>
+  <title>spark 单机环境搭建 | Mr.He' BLOG</title>
   
 
 
@@ -303,7 +306,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="song">
@@ -320,7 +323,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">linux下java环境部署</h1>
+          <h1 class="post-title" itemprop="name headline">spark 单机环境搭建</h1>
         
 
         <div class="post-meta">
@@ -332,7 +335,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-13T13:03:24+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-13T11:18:13+08:00">
                 2019-11-13
               </time>
             
@@ -348,7 +351,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-11-13T13:52:30+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-13T15:27:01+08:00">
                 2019-11-13
               </time>
             
@@ -362,7 +365,7 @@
 
           
           
-             <span id="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" class="leancloud_visitors" data-flag-title="linux下java环境部署">
+             <span id="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="leancloud_visitors" data-flag-title="spark 单机环境搭建">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -387,7 +390,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  229
+                  460
                 </span>
               
 
@@ -424,27 +427,53 @@
       
 
       
-        <h2 id="下载JDK1-8的安装包"><a href="#下载JDK1-8的安装包" class="headerlink" title="下载JDK1.8的安装包"></a>下载JDK1.8的安装包</h2><p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">java官网</a>&lt;–</p>
-<p>根据自己的系统版本下载<em>.tar.gz结尾的压缩包， 我这里下载的是 *</em>jdk-8u151-linux-i586.tar.gz** 安装包</p>
-<h2 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h2><p>将下载的安装包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk-8u151-linux-i586.tar.gz</span><br></pre></td></tr></table></figure>
+        <h2 id="环境需要"><a href="#环境需要" class="headerlink" title="环境需要"></a>环境需要</h2><ul>
+<li>java环境部署</li>
+<li>spark环境部署</li>
+</ul>
+<h2 id="java环境部署（安装jdk）"><a href="#java环境部署（安装jdk）" class="headerlink" title="java环境部署（安装jdk）"></a>java环境部署（安装jdk）</h2><p>参考：<a href="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" title="linux下java环境部署">linux下java环境部署</a></p>
+<h2 id="spark-环境部署"><a href="#spark-环境部署" class="headerlink" title="spark 环境部署"></a>spark 环境部署</h2><h3 id="spark安装包下载"><a href="#spark安装包下载" class="headerlink" title="spark安装包下载"></a>spark安装包下载</h3><p>–&gt;<a href="http://spark.apache.org/downloads.html" target="_blank" rel="noopener">spark官网下载地址</a>&lt;–</p>
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E5%AE%98%E7%BD%91.png" alt="spark官网"></p>
+<p>这里我下载的2.4.4版本:spark-2.4.4-bin-hadoop2.7.tgz</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>将下载的tgz包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf spark-2.4.4-bin-hadoop2.7.tgz</span><br></pre></td></tr></table></figure>
 
-<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>配置系统的环境变量：编辑 <strong>vim /etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
+<p>为了操作方便，将解压得到的spark-2.4.4-bin-hadoop2.7文件夹改名为spark-2.4.4：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv spark-2.4.4-bin-hadoop2.7 spark-2.4.4</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>配置系统的环境变量：编辑 <strong>/etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vim</span><br></pre></td></tr></table></figure>
 
 <p>编辑环境变量：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/profile</span><br></pre></td></tr></table></figure>
 
 <p>然后在文件的最后加上如下配置：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">java</span></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_151</span><br><span class="line">export JRE_HOME=$JAVA_HOME/jre</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line"><span class="meta">#</span><span class="bash">java end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Spark</span></span><br><span class="line">export SPARK_HOME=/opt/spark-2.4.4</span><br><span class="line">export PATH=$PATH:$SPARK_HOME/bin</span><br><span class="line"><span class="meta">#</span><span class="bash">Spark end</span></span><br></pre></td></tr></table></figure>
 
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png" alt="spark环境变量"></p>
+<p>然后键盘按下 <strong>“Esc”</strong> 键退出编辑模式，输入 <strong>:wq</strong> 保存即可</p>
 <p>重新加载文件让其生效</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
 
-<h2 id="检查是否配置成功"><a href="#检查是否配置成功" class="headerlink" title="检查是否配置成功"></a>检查是否配置成功</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -verison</span><br></pre></td></tr></table></figure>
+<h3 id="配置spark的配置文件之单机版"><a href="#配置spark的配置文件之单机版" class="headerlink" title="配置spark的配置文件之单机版"></a>配置spark的配置文件之单机版</h3><p>进入%SPARK_HOME%/conf路径，分别拷贝两个配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/spark-2.4.4/conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 分别拷贝两个配置文件</span></span><br><span class="line">cp spark-env.sh.template spark-env.sh</span><br><span class="line">cp slaves.template  slaves</span><br></pre></td></tr></table></figure>
 
-<p>如下显示即安装成功</p>
-<p><img src="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png" alt="检查配置"></p>
+<p>编辑spark-env.sh文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export SPARK_MASTER_IP=192.168.1.210</span><br><span class="line">export SPARK_MASTER_PORT=7077</span><br></pre></td></tr></table></figure>
+
+<p>编辑slaves文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">localhost</span><br></pre></td></tr></table></figure>
+
+<p>测试环境配置是否成功</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/spark-2.4.4/bin/</span><br><span class="line">./run-example   SparkPi   10</span><br></pre></td></tr></table></figure>
+
+<p>出现如下图所示字样即配置成功</p>
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E6%B5%8B%E8%AF%95.png" alt="spark测试"></p>
+<p>启动spark，bin目录下执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./spark-shell</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置spark的配置文件之单机版集群版"><a href="#配置spark的配置文件之单机版集群版" class="headerlink" title="配置spark的配置文件之单机版集群版"></a>配置spark的配置文件之单机版集群版</h3><p>spark 的一些默认端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">8080：master的webUI，sparkwebUI的端口</span><br><span class="line"></span><br><span class="line">7077：提交任务的端口</span><br><span class="line"></span><br><span class="line">8081：worker的webUI的端口</span><br><span class="line"></span><br><span class="line">18080：historyServer的webUI的端口</span><br><span class="line"></span><br><span class="line">4040：application的webUI的端口</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -460,6 +489,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
 
       
       
@@ -469,8 +504,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="next" title="spark 单机环境搭建">
-                <i class="fa fa-chevron-left"></i> spark 单机环境搭建
+              <a href="/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/" rel="next" title="war包部署spring cloud 工程">
+                <i class="fa fa-chevron-left"></i> war包部署spring cloud 工程
               </a>
             
           </div>
@@ -478,6 +513,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" rel="prev" title="linux下java环境部署">
+                linux下java环境部署 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -609,7 +648,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#下载JDK1-8的安装包"><span class="nav-number">1.</span> <span class="nav-text">下载JDK1.8的安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解压缩"><span class="nav-number">2.</span> <span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置环境变量"><span class="nav-number">3.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检查是否配置成功"><span class="nav-number">4.</span> <span class="nav-text">检查是否配置成功</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境需要"><span class="nav-number">1.</span> <span class="nav-text">环境需要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java环境部署（安装jdk）"><span class="nav-number">2.</span> <span class="nav-text">java环境部署（安装jdk）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spark-环境部署"><span class="nav-number">3.</span> <span class="nav-text">spark 环境部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#spark安装包下载"><span class="nav-number">3.1.</span> <span class="nav-text">spark安装包下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解压缩"><span class="nav-number">3.2.</span> <span class="nav-text">解压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置环境变量"><span class="nav-number">3.3.</span> <span class="nav-text">配置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置spark的配置文件之单机版"><span class="nav-number">3.4.</span> <span class="nav-text">配置spark的配置文件之单机版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置spark的配置文件之单机版集群版"><span class="nav-number">3.5.</span> <span class="nav-text">配置spark的配置文件之单机版集群版</span></a></li></ol></li></ol></div>
             
 
           </div>
