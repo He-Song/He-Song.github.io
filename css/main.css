@@ -1681,10 +1681,9 @@ pre .javascript .function {
     display: none !important;
   }
 }
-@media (max-width: 767px) {
-  .sidebar {
-    display: none !important;
-  }
+.sidebar [],
+.sidebar +mobile() {
+  display: none !important;
 }
 .sidebar-inner {
   position: relative;
@@ -1831,7 +1830,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #341cd9;
+  background: #d63478;
 }
 .links-of-blogroll {
   font-size: 13px;

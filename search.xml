@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>linux下java环境部署</title>
+    <url>/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h2 id="下载JDK1-8的安装包"><a href="#下载JDK1-8的安装包" class="headerlink" title="下载JDK1.8的安装包"></a>下载JDK1.8的安装包</h2><p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">java官网</a>&lt;–</p>
+<p>根据自己的系统版本下载<em>.tar.gz结尾的压缩包， 我这里下载的是 *</em>jdk-8u151-linux-i586.tar.gz**</p>
+<h2 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h2><p>将下载的安装包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf jdk-8u151-linux-i586.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>配置系统的环境变量：编辑 <strong>vim /etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install vim</span><br></pre></td></tr></table></figure>
+
+<p>编辑环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim  /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>然后在文件的最后加上如下配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">java</span></span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.8.0_151</span><br><span class="line">export JRE_HOME=$JAVA_HOME/jre</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line"><span class="meta">#</span><span class="bash">java end</span></span><br></pre></td></tr></table></figure>
+
+<p>重新加载文件让其生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="检查是否配置成功"><a href="#检查是否配置成功" class="headerlink" title="检查是否配置成功"></a>检查是否配置成功</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -verison</span><br></pre></td></tr></table></figure>
+
+<p>如下显示即安装成功</p>
+<p><img src="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png" alt="检查配置"></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>spark 单机集群环境搭建</title>
+    <url>/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="环境需要"><a href="#环境需要" class="headerlink" title="环境需要"></a>环境需要</h2><ul>
+<li>java环境部署</li>
+<li>spark环境部署</li>
+</ul>
+<h2 id="java环境部署（安装jdk）"><a href="#java环境部署（安装jdk）" class="headerlink" title="java环境部署（安装jdk）"></a>java环境部署（安装jdk）</h2><p>参考：<a href="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" title="linux下java环境部署">linux下java环境部署</a></p>
+<h2 id="spark-环境部署"><a href="#spark-环境部署" class="headerlink" title="spark 环境部署"></a>spark 环境部署</h2><h3 id="spark安装包下载"><a href="#spark安装包下载" class="headerlink" title="spark安装包下载"></a>spark安装包下载</h3><p>–&gt;<a href="http://spark.apache.org/downloads.html" target="_blank" rel="noopener">spark官网下载地址</a>&lt;–</p>
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E5%AE%98%E7%BD%91.png" alt="spark官网"></p>
+<p>这里我下载的2.4.4版本:spark-2.4.4-bin-without-hadoop.tgz</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>将下载的tgz包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf spark-2.4.4-bin-without-hadoop.tgz</span><br></pre></td></tr></table></figure>
+
+<p>为了操作方便，将解压得到的spark-2.4.4-bin-without-hadoop文件夹改名为spark-2.4.4：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mv spark-2.4.4-bin-without-hadoop spark-2.4.4</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>配置系统的环境变量：编辑 <strong>/etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install vim</span><br></pre></td></tr></table></figure>
+
+<p>编辑环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim  /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>然后在文件的最后加上如下配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Spark</span></span><br><span class="line">export SPARK_HOME=/opt/spark-2.4.4</span><br><span class="line">export PATH=$PATH:$SPARK_HOME/bin</span><br><span class="line"><span class="meta">#</span><span class="bash">Spark end</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png" alt="spark环境变量"></p>
+<p>然后键盘按下 <strong>“Esc”</strong> 键退出编辑模式，输入 <strong>:wq</strong> 保存即可</p>
+<p>重新加载文件让其生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="配置spark的配置文件"><a href="#配置spark的配置文件" class="headerlink" title="配置spark的配置文件"></a>配置spark的配置文件</h3>]]></content>
+      <tags>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>war包部署spring cloud 工程</title>
+    <url>/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/</url>
+    <content><![CDATA[<p>最近接到一个任务：将spring cloud架构的系统部署到国产中间件：apusic(金蝶)中去。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于之前完全没有接触过这个中间件，第一个想到的就是不用springboot 自带的tomcat，将服务器打成war包部署到外部tomcat中去。部署成功后再将他搬到apusic(当时想的是毕竟GC，操作应该大同小异)。</p>
+<p>于是就开始了下面的操作:</p>
+<blockquote>
+<p>项目是gradle构建</p>
+</blockquote>
+<h3 id="更改build-gradle将springboot-服务打包成war"><a href="#更改build-gradle将springboot-服务打包成war" class="headerlink" title="更改build.gradle将springboot 服务打包成war"></a>更改build.gradle将springboot 服务打包成war</h3><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line">apply plugin: <span class="string">'org.springframework.boot'</span></span><br><span class="line">apply plugin: <span class="string">'eclipse'</span></span><br><span class="line">apply plugin: <span class="string">'net.saliman.properties'</span></span><br><span class="line">apply plugin: <span class="string">'io.spring.dependency-management'</span></span><br><span class="line">apply plugin: <span class="string">'war'</span> # 引入war插件</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    # 由于用外部tomcat启动 去掉继承的tomcat</span><br><span class="line">    providedRuntime <span class="string">'org.springframework.boot:spring-boot-starter-tomcat'</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法"><a href="#新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法" class="headerlink" title="新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法"></a>新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: hesong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Describe</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2019/10/21 18:17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MCStartApplication</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> builder.sources(ManagementCenterApplication.class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="file:///C:/Users/76797/Desktop/AAS-V9.0-201905221217/docs/html/guide/ch69s06.html" target="_blank" rel="noopener">金蝶部署参考文档</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jps |grep Bootstrap | awk '&#123;print $1&#125;' | xargs kill -s 9</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
     <title>高可用性的mongo集群搭建</title>
     <url>/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h4 id="mongoDB安装"><a href="#mongoDB安装" class="headerlink" title="mongoDB安装"></a>mongoDB安装</h4><p>参照：<a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/</a></p>
