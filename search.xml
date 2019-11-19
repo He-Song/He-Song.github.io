@@ -11,16 +11,20 @@
 </blockquote>
 </blockquote>
 <h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3>]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
       <tags>
-        <tag>spark 集群 SSH免密登录</tag>
+        <tag>SSH免密登录</tag>
+        <tag>小技巧</tag>
       </tags>
   </entry>
   <entry>
     <title>linux下java环境部署</title>
     <url>/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<h2 id="下载JDK1-8的安装包"><a href="#下载JDK1-8的安装包" class="headerlink" title="下载JDK1.8的安装包"></a>下载JDK1.8的安装包</h2><p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">jdk下载官网</a>&lt;–</p>
+    <content><![CDATA[<h2 id="下载JDK安装包"><a href="#下载JDK安装包" class="headerlink" title="下载JDK安装包"></a>下载JDK安装包</h2><p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">jdk下载官网</a>&lt;–</p>
 <p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase8-2177648.html" target="_blank" rel="noopener">jdk历史版本下载</a>&lt;–</p>
-<p>根据自己的系统版本下载<em>.tar.gz结尾的压缩包， 我这里下载的是 *</em>jdk-8u151-linux-i586.tar.gz** 安装包</p>
+<p>根据自己的系统版本下载*.tar.gz结尾的压缩包， 我这里下载的是 jdk-8u151-linux-i586.tar.gz 安装包</p>
 <h2 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h2><p>将下载的安装包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf jdk-8u151-linux-i586.tar.gz</span><br></pre></td></tr></table></figure>
 
@@ -41,6 +45,13 @@
 <p>如下显示即安装成功</p>
 <p><img src="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png" alt="检查配置"></p>
 ]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>环境搭建</tag>
+      </tags>
   </entry>
   <entry>
     <title>spark 单机环境搭建</title>
@@ -96,7 +107,11 @@
 <h3 id="配置spark的配置文件之单机版集群版"><a href="#配置spark的配置文件之单机版集群版" class="headerlink" title="配置spark的配置文件之单机版集群版"></a>配置spark的配置文件之单机版集群版</h3><p>spark 的一些默认端口</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">8080：master的webUI，sparkwebUI的端口</span><br><span class="line"></span><br><span class="line">7077：提交任务的端口</span><br><span class="line"></span><br><span class="line">8081：worker的webUI的端口</span><br><span class="line"></span><br><span class="line">18080：historyServer的webUI的端口</span><br><span class="line"></span><br><span class="line">4040：application的webUI的端口</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
       <tags>
+        <tag>环境搭建</tag>
         <tag>spark</tag>
       </tags>
   </entry>
@@ -116,6 +131,13 @@
 <p><a href="file:///C:/Users/76797/Desktop/AAS-V9.0-201905221217/docs/html/guide/ch69s06.html" target="_blank" rel="noopener">金蝶部署参考文档</a></p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jps |grep Bootstrap | awk '&#123;print $1&#125;' | xargs kill -s 9</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>war包部署</tag>
+      </tags>
   </entry>
   <entry>
     <title>高可用性的mongo集群搭建</title>
@@ -317,6 +339,9 @@
 </li>
 </ol>
 ]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
       <tags>
         <tag>mongo集群</tag>
         <tag>部署</tag>
@@ -418,13 +443,20 @@ ggVG    //全选
 &quot;+y     //复制选中内容到＋寄存器，也就是系统的剪贴板，供其他程序用
 gg&quot;+yG  //要复制到别的地方，用 &quot;+y 来复制</code></pre><h4 id="9-时间戳"><a href="#9-时间戳" class="headerlink" title="9.时间戳"></a>9.时间戳</h4><pre><code>date    //获取当前系统时间
 date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 id="10-文件比较之’diff’"><a href="#10-文件比较之’diff’" class="headerlink" title="10.文件比较之’diff’"></a>10.文件比较之’diff’</h4>]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
       <tags>
         <tag>linux</tag>
+        <tag>命令归档</tag>
       </tags>
   </entry>
   <entry>
     <title>初入Hexo</title>
     <url>/2019/10/29/hello-world/</url>
     <content><![CDATA[]]></content>
+      <categories>
+        <category>博客搭建</category>
+      </categories>
   </entry>
 </search>
