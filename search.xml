@@ -6,11 +6,14 @@
     <content><![CDATA[<p>当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：</p>
 <p><img src="/2019/11/15/spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95.png" alt="免密登录"></p>
 <blockquote>
-<blockquote>
-<p>首先我们有多台spark服务器</p>
+<p>首先我们有多台服务器</p>
 </blockquote>
-</blockquote>
-<h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3>]]></content>
+<h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3><p>过程中直接回车就好</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<h3 id="分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys"><a href="#分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys" class="headerlink" title="分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 authorized_keys"></a>分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 <strong>authorized_keys</strong></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp id_rsa_pub authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置ssh免密登录"><a href="#配置ssh免密登录" class="headerlink" title="配置ssh免密登录"></a>配置ssh免密登录</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-copy-id -i hostname # 或者ip</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>工作与技术</category>
       </categories>

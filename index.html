@@ -350,8 +350,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-11-19T12:44:02+08:00">
-                2019-11-19
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-25T12:25:29+08:00">
+                2019-11-25
               </time>
             
           </span>
@@ -411,7 +411,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  74
+                  127
                 </span>
               
 
@@ -453,12 +453,13 @@
           当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：
 
 
+首先我们有多台服务器
 
-首先我们有多台spark服务器
+生成SSH公钥过程中直接回车就好
+1ssh-keygen -t rsa
 
-
-生成SSH公钥
-          
+分别将每台服务器生成的 /root/.ssh 目录下
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/11/15/spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/#more" rel="contents">

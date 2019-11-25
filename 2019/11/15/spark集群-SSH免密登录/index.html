@@ -88,16 +88,16 @@
 
 
 
-<meta name="description" content="当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：    首先我们有多台spark服务器   生成SSH公钥">
+<meta name="description" content="当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：   首先我们有多台服务器  生成SSH公钥过程中直接回车就好 1ssh-keygen -t rsa  分别将每台服务器生成的 &#x2F;root&#x2F;.ssh 目录下的公钥文件复制成 authorized_keys1cp id_rsa_pub authorized_">
 <meta name="keywords" content="SSH免密登录,小技巧">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spark集群-SSH免密登录">
 <meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;15&#x2F;spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95&#x2F;index.html">
 <meta property="og:site_name" content="Mr.He&#39; BLOG">
-<meta property="og:description" content="当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：    首先我们有多台spark服务器   生成SSH公钥">
+<meta property="og:description" content="当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：   首先我们有多台服务器  生成SSH公钥过程中直接回车就好 1ssh-keygen -t rsa  分别将每台服务器生成的 &#x2F;root&#x2F;.ssh 目录下的公钥文件复制成 authorized_keys1cp id_rsa_pub authorized_">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;15&#x2F;spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95&#x2F;%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95.png">
-<meta property="og:updated_time" content="2019-11-19T04:44:02.670Z">
+<meta property="og:updated_time" content="2019-11-25T04:25:29.947Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;11&#x2F;15&#x2F;spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95&#x2F;%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95.png">
 
@@ -351,8 +351,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-11-19T12:44:02+08:00">
-                2019-11-19
+              <time title="更新于" itemprop="dateModified" datetime="2019-11-25T12:25:29+08:00">
+                2019-11-25
               </time>
             
           </span>
@@ -412,7 +412,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  74
+                  127
                 </span>
               
 
@@ -452,11 +452,14 @@
         <p>当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：</p>
 <p><img src="/2019/11/15/spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95.png" alt="免密登录"></p>
 <blockquote>
-<blockquote>
-<p>首先我们有多台spark服务器</p>
+<p>首先我们有多台服务器</p>
 </blockquote>
-</blockquote>
-<h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3>
+<h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3><p>过程中直接回车就好</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<h3 id="分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys"><a href="#分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys" class="headerlink" title="分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 authorized_keys"></a>分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 <strong>authorized_keys</strong></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp id_rsa_pub authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置ssh免密登录"><a href="#配置ssh免密登录" class="headerlink" title="配置ssh免密登录"></a>配置ssh免密登录</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-copy-id -i hostname # 或者ip</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -659,7 +662,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成SSH公钥"><span class="nav-number">1.</span> <span class="nav-text">生成SSH公钥</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成SSH公钥"><span class="nav-number">1.</span> <span class="nav-text">生成SSH公钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys"><span class="nav-number">2.</span> <span class="nav-text">分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 authorized_keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置ssh免密登录"><span class="nav-number">3.</span> <span class="nav-text">配置ssh免密登录</span></a></li></ol></div>
             
 
           </div>
