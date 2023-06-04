@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Docker 学习记录</title>
+    <url>/2020/11/11/Docker-%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<h1 id="一、Docker介绍"><a href="#一、Docker介绍" class="headerlink" title="一、Docker介绍"></a>一、Docker介绍</h1><blockquote>
+<h2 id="1-下载Docker依赖的环境"><a href="#1-下载Docker依赖的环境" class="headerlink" title="1. 下载Docker依赖的环境"></a>1. 下载Docker依赖的环境</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 想安装Docker，需要先将依赖的环境全部下载下来，就像Maven依赖JDK一样</span></span><br><span class="line">yum -y install yum-utils device-mapper-persistent-data lvm2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="2-指定Docker镜像源"><a href="#2-指定Docker镜像源" class="headerlink" title="2. 指定Docker镜像源"></a>2. 指定Docker镜像源</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 默认下载Docker会去国外服务器下载，速度较慢，可以设置为阿里云镜像源，速度更快</span></span><br><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="3-安装docker"><a href="#3-安装docker" class="headerlink" title="3. 安装docker"></a>3. 安装docker</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum makecache fast</span><br><span class="line">yum -y install docker-ce</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="4-启动Docker并测试"><a href="#4-启动Docker并测试" class="headerlink" title="4. 启动Docker并测试"></a>4. 启动Docker并测试</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">安装成功后，需要手动启动，设置为开机启动，并测试一下 Docker</span><br><span class="line"><span class="meta">#</span><span class="bash">启动docker服务</span></span><br><span class="line">systemctl start docker</span><br><span class="line"><span class="meta">#</span><span class="bash">设置开机自动启动</span></span><br><span class="line">systemctl enable docker</span><br><span class="line"><span class="meta">#</span><span class="bash">测试</span></span><br><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、-Docker的中央仓库"><a href="#二、-Docker的中央仓库" class="headerlink" title="二、 Docker的中央仓库"></a>二、 Docker的中央仓库</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 1.Docker官方的中央仓库：这个仓库是镜像最全的，但是下载速度较慢。</span></span><br><span class="line">https://hub.docker.com/</span><br><span class="line"><span class="meta">#</span><span class="bash"> 2.国内的镜像网站：网易蜂巢，daoCloud等，下载速度快，但是镜像相对不全。</span></span><br><span class="line">https://c.163yun.com/hub#/home </span><br><span class="line">http://hub.daocloud.io/ （推荐使用）</span><br><span class="line"><span class="meta">#</span><span class="bash"> 3.在公司内部会采用私服的方式拉取镜像（添加配置）</span></span><br><span class="line"><span class="meta">#</span><span class="bash">需要创建 /etc/docker/daemon.json，并添加如下内容</span></span><br><span class="line">&#123;</span><br><span class="line">	"registry-mirrors":["https://registry.docker-cn.com"],</span><br><span class="line">	"insecure-registries":["ip:port"]</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启两个服务</span></span><br><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、-镜像的操作"><a href="#三、-镜像的操作" class="headerlink" title="三、 镜像的操作"></a>三、 镜像的操作</h1><blockquote>
+<h2 id="1-拉取镜像"><a href="#1-拉取镜像" class="headerlink" title="1. 拉取镜像"></a>1. 拉取镜像</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 从中央仓库拉取镜像到本地</span></span><br><span class="line">docker pull 镜像名称[:tag]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 举个栗子:</span></span><br><span class="line">docker pull daocloud.io/library/tomcat:8.5.15-jre8</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="2-查看本地所有镜像"><a href="#2-查看本地所有镜像" class="headerlink" title="2. 查看本地所有镜像"></a>2. 查看本地所有镜像</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看本地已经安装过的镜像信息，包含标识，名称，版本，更新时间，大小</span></span><br><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="3-删除本地镜像"><a href="#3-删除本地镜像" class="headerlink" title="3. 删除本地镜像"></a>3. 删除本地镜像</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 镜像会占用磁盘空间，可以直接手动删除，标识通过查看获取</span></span><br><span class="line">docker rmi 镜像的标识</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<h2 id="4-镜像的导入导出"><a href="#4-镜像的导入导出" class="headerlink" title="4. 镜像的导入导出"></a>4. 镜像的导入导出</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 如果因为网络原因可以通过硬盘的方式传输镜像，虽然不规范，但是有效，但是这种方式导出的镜像名称和版本都是null，需要手动修改</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将本地的镜像导出</span></span><br><span class="line">docker save -o 导出的路径 镜像id</span><br><span class="line"><span class="meta">#</span><span class="bash"> 加载本地的镜像文件</span></span><br><span class="line">docker load -i 镜像文件</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改镜像文件</span></span><br><span class="line">docker tag 镜像id 新镜像名称：版本</span><br></pre></td></tr></table></figure>
+
+<h1 id="四、-容器的操作"><a href="#四、-容器的操作" class="headerlink" title="四、 容器的操作"></a>四、 容器的操作</h1><blockquote>
+<h2 id="1-运行容器"><a href="#1-运行容器" class="headerlink" title="1. 运行容器"></a>1. 运行容器</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 运行容器需要定制具体镜像，如果镜像不存在，会直接下载</span></span><br><span class="line"><span class="meta">#</span><span class="bash">简单操作</span></span><br><span class="line">docker run 镜像的标识|镜像的名称[:tag]</span><br><span class="line"><span class="meta">#</span><span class="bash">常用的参数</span></span><br><span class="line">docker run -d -p 宿主机端口:容器端口 --name 容器名称 镜像的标识|镜像名称[:tag]</span><br><span class="line"><span class="meta">#</span><span class="bash">-d:代表后台运行容器</span></span><br><span class="line"><span class="meta">#</span><span class="bash">-p 宿主机端口:容器端口：为了映射当前Linux的端口和容器的端口</span></span><br><span class="line"><span class="meta">#</span><span class="bash">--name 容器名称:指定容器的名称</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<h2 id="2-查看正在运行的容器"><a href="#2-查看正在运行的容器" class="headerlink" title="2. 查看正在运行的容器"></a>2. 查看正在运行的容器</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看全部正在运行的容器信息</span></span><br><span class="line">docker ps [-qa]</span><br><span class="line"><span class="meta">#</span><span class="bash">-a 查看全部的容器，包括没有运行</span></span><br><span class="line"><span class="meta">#</span><span class="bash">-q 只查看容器的标识</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<h2 id="3-查看容器日志"><a href="#3-查看容器日志" class="headerlink" title="3. 查看容器日志"></a>3. 查看容器日志</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看容器日志，以查看容器运行的信息</span></span><br><span class="line">docker logs -f 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">-f：可以滚动查看日志的最后几行</span></span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<h2 id="4-进入容器的内部"><a href="#4-进入容器的内部" class="headerlink" title="4. 进入容器的内部"></a>4. 进入容器的内部</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 可以进入容器的内部进行操作</span></span><br><span class="line">docker exec -it 容器id bash</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="5-复制内容到容器"><a href="#5-复制内容到容器" class="headerlink" title="5.复制内容到容器"></a>5.复制内容到容器</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将宿主机的文件复制到容器内部的指定目录</span></span><br><span class="line">docker cp 文件名称 容器id:容器内部路径</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<h2 id="6-重启-amp-启动-amp-停止-amp-删除容器"><a href="#6-重启-amp-启动-amp-停止-amp-删除容器" class="headerlink" title="6. 重启&amp;启动&amp;停止&amp;删除容器"></a>6. 重启&amp;启动&amp;停止&amp;删除容器</h2></blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">容器的启动，停止，删除等操作，后续会经常使用到</span><br><span class="line"><span class="meta">#</span><span class="bash">重新启动容器</span></span><br><span class="line">docker restart 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">启动停止运行的容器</span></span><br><span class="line">docker start 容器id</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash">停止指定的容器(删除容器前，需要先停止容器)</span></span><br><span class="line">docker stop 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">停止全部容器</span></span><br><span class="line">docker stop $(docker ps -qa)</span><br><span class="line"><span class="meta">#</span><span class="bash">删除指定容器</span></span><br><span class="line">docker rm 容器id</span><br><span class="line"><span class="meta">#</span><span class="bash">删除全部容器</span></span><br><span class="line">docker rm $(docker ps -qa)</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>初入Hexo</title>
+    <url>/2019/10/29/hello-world/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>博客搭建</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>linux的一些零星记录</title>
+    <url>/2019/10/30/linux/</url>
+    <content><![CDATA[<h4 id="1-linux忘记root密码"><a href="#1-linux忘记root密码" class="headerlink" title="1.linux忘记root密码"></a>1.linux忘记root密码</h4><p><a href="https://www.cnblogs.com/kerrycode/p/3479925.html" target="_blank" rel="noopener">解决办法</a></p>
+<h4 id="2-java环境变量"><a href="#2-java环境变量" class="headerlink" title="2.java环境变量"></a>2.java环境变量</h4><p>1.编辑系统变量文件：vi /etc/profile</p>
+<pre><code>export JAVA_HOME=/usr/java/jdk1.8.0_151
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib
+export PATH=$JAVA_HOME/bin:$PATH</code></pre><h4 id="3-进程"><a href="#3-进程" class="headerlink" title="3.进程"></a>3.进程</h4><pre><code>netstat -tunlp |grep 22 //查看22端口使用情况</code></pre><h4 id="4-tar解、压缩"><a href="#4-tar解、压缩" class="headerlink" title="4.tar解、压缩"></a>4.tar解、压缩</h4><p>1.tar</p>
+<pre><code>-c: 建立压缩档案
+-x：解压
+-t：查看内容
+-r：向压缩归档文件末尾追加文件
+-u：更新原压缩包中的文件</code></pre><p>2.这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。</p>
+<pre><code>-z：有gzip属性的
+-j：有bz2属性的
+-Z：有compress属性的
+-v：显示所有过程
+-O：将文件解开到标准输出</code></pre><p>3.下面的参数-f是必须的</p>
+<pre><code>-f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
+# tar -cf all.tar *.jpg
+这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
+# tar -rf all.tar *.gif
+这条命令是将所有.gif的文件增加到all.tar的包里面去。-r是表示增加文件的意思。
+# tar -uf all.tar logo.gif
+这条命令是更新原来tar包all.tar中logo.gif文件，-u是表示更新文件的意思。
+# tar -tf all.tar
+这条命令是列出all.tar包中所有文件，-t是列出文件的意思
+# tar -xf all.tar
+这条命令是解出all.tar包中所有文件，-x是解开的意思</code></pre><p>4.压缩</p>
+<pre><code>tar -cvf jpg.tar *.jpg //将目录里所有jpg文件打包成tar.jpg 
+tar -czf jpg.tar.gz *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用gzip压缩，生成一个gzip压缩过的包，命名为jpg.tar.gz
+tar -cjf jpg.tar.bz2 *.jpg //将目录里所有jpg文件打包成jpg.tar后，并且将其用bzip2压缩，生成一个bzip2压缩过的包，命名为jpg.tar.bz2
+tar -cZf jpg.tar.Z *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用compress压缩，生成一个umcompress压缩过的包，命名为jpg.tar.Z
+rar a jpg.rar *.jpg //rar格式的压缩，需要先下载rar for linux
+zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux</code></pre><p>5.解压</p>
+<pre><code>tar -xvf file.tar //解压 tar包
+tar -xzvf file.tar.gz //解压tar.gz
+tar -xjvf file.tar.bz2   //解压 tar.bz2
+tar -xZvf file.tar.Z   //解压tar.Z
+unrar e file.rar //解压rar
+unzip file.zip //解压zip</code></pre><p>6.总结</p>
+<pre><code>1、*.tar 用 tar -xvf 解压
+2、*.gz 用 gzip -d或者gunzip 解压
+3、*.tar.gz和*.tgz 用 tar -xzf 解压
+4、*.bz2 用 bzip2 -d或者用bunzip2 解压
+5、*.tar.bz2用tar -xjf 解压
+6、*.Z 用 uncompress 解压
+7、*.tar.Z 用tar -xZf 解压
+8、*.rar 用 unrar e解压
+9、*.zip 用 unzip 解压</code></pre><p><a href="http://blog.csdn.net/zhongguozhichuang/article/details/52727745" target="_blank" rel="noopener">http://blog.csdn.net/zhongguozhichuang/article/details/52727745</a></p>
+<h4 id="5-linux下动态查看日志"><a href="#5-linux下动态查看日志" class="headerlink" title="5. linux下动态查看日志"></a>5. linux下动态查看日志</h4><pre><code>tail -f fileName</code></pre><h4 id="6-服务自启动"><a href="#6-服务自启动" class="headerlink" title="6. 服务自启动"></a>6. 服务自启动</h4><pre><code>[root@localhost ~]chkconfig smb on
+#or
+[root@localhost ~]# vi /etc/rc.local
+#!/bin/sh
+#
+# This script will be executed *after* all the other init scripts.
+# You can put your own initialization stuff in here if you don&apos;t
+# want to do the full Sys V style init stuff.
+service smb start</code></pre><h4 id="7-网卡配置"><a href="#7-网卡配置" class="headerlink" title="7.网卡配置"></a>7.网卡配置</h4><pre><code>ifdown eth3 &amp;&amp; ifup eth3
+service network restart</code></pre><h4 id="8-vi编辑器の操作"><a href="#8-vi编辑器の操作" class="headerlink" title="8.vi编辑器の操作"></a>8.vi编辑器の操作</h4><pre><code>a   //在当前字符后添加文本
+A   //在行末添加文本
+i   //在当前字符前插入文本
+I   //在当前行首插入文本
+o   //在当前行后面插入一空行
+O   //在当前行前面插入一空行
+/字符串 //往下查找字符串
+        n   //往下跳到下一个匹配位置
+        N   //往上跳到下一个匹配位置
+?字符串 //往上匹配字符串（与&apos;/字符串&apos;操作相反）
+p   //粘贴文本操作，用于将缓存区的内容粘贴到当前光标所在位置的下方
+P   //粘贴文本操作，用于将缓存区的内容粘贴到当前光标所在位置的上方
+Ctrl+u  //向文件首翻半屏
+Ctrl+d  //向文件尾翻半屏
+Ctrl+f  //向文件尾翻一屏
+Ctrl+b  //向文件首翻一屏；
+Esc     //从编辑模式切换到命令模式；
+ZZ      //命令模式下保存当前文件所做的修改后退出vi；
+:行号   //光标跳转到指定行的行首；
+:$      //光标跳转到最后一行的行首；
+x或X    //删除一个字符，x删除光标后的，而X删除光标前的；
+D       //删除从当前光标到光标所在行尾的全部字符；
+dd      //删除光标行正行内容；
+ndd     //删除当前行及其后n-1行；
+nyy     //当前行及其下n行的内容保存到寄存器？中，其中？为一个字母，n为一个数字；
+gg      //让光标移到首行，在vim才有效，vi中无效
+G       //光标移到最后一行
+V       //是进入Visual(可视）模式
+dG      //全部删除
+ggyG    //全部复制
+ggVG    //全选
+        d       //删除选中
+        y       //复制选中内容到0号寄存器
+&quot;+y     //复制选中内容到＋寄存器，也就是系统的剪贴板，供其他程序用
+gg&quot;+yG  //要复制到别的地方，用 &quot;+y 来复制</code></pre><h4 id="9-时间戳"><a href="#9-时间戳" class="headerlink" title="9.时间戳"></a>9.时间戳</h4><pre><code>date    //获取当前系统时间
+date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 id="10-文件比较之’diff’"><a href="#10-文件比较之’diff’" class="headerlink" title="10.文件比较之’diff’"></a>10.文件比较之’diff’</h4>]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>命令归档</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux下java环境部署</title>
+    <url>/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h2 id="下载JDK安装包"><a href="#下载JDK安装包" class="headerlink" title="下载JDK安装包"></a>下载JDK安装包</h2><p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">jdk下载官网</a>&lt;–</p>
+<p>–&gt;<a href="https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase8-2177648.html" target="_blank" rel="noopener">jdk历史版本下载</a>&lt;–</p>
+<p>根据自己的系统版本下载*.tar.gz结尾的压缩包， 我这里下载的是 jdk-8u151-linux-i586.tar.gz 安装包</p>
+<h2 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h2><p>将下载的安装包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf jdk-8u151-linux-i586.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>配置系统的环境变量：编辑 <strong>vim /etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install vim</span><br></pre></td></tr></table></figure>
+
+<p>编辑环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim  /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>然后在文件的最后加上如下配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">java</span></span><br><span class="line">export JAVA_HOME=/opt/jdk1.8.0_151</span><br><span class="line">export JRE_HOME=$JAVA_HOME/jre</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line"><span class="meta">#</span><span class="bash">java end</span></span><br></pre></td></tr></table></figure>
+
+<p>重新加载文件让其生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h2 id="检查是否配置成功"><a href="#检查是否配置成功" class="headerlink" title="检查是否配置成功"></a>检查是否配置成功</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">java -verison</span><br></pre></td></tr></table></figure>
+
+<p>如下显示即安装成功</p>
+<p><img src="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/%E6%A3%80%E6%9F%A5%E9%85%8D%E7%BD%AE.png" alt="检查配置"></p>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>环境搭建</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>spark 单机环境搭建</title>
+    <url>/2019/11/13/spark-%E5%8D%95%E6%9C%BA%20%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="环境需要"><a href="#环境需要" class="headerlink" title="环境需要"></a>环境需要</h2><ul>
+<li>java环境部署</li>
+<li>spark环境部署</li>
+</ul>
+<h2 id="java环境部署（安装jdk）"><a href="#java环境部署（安装jdk）" class="headerlink" title="java环境部署（安装jdk）"></a>java环境部署（安装jdk）</h2><p>参考：<a href="/2019/11/13/linux%E4%B8%8Bjava%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" title="linux下java环境部署">linux下java环境部署</a></p>
+<h2 id="spark-环境部署"><a href="#spark-环境部署" class="headerlink" title="spark 环境部署"></a>spark 环境部署</h2><h3 id="spark安装包下载"><a href="#spark安装包下载" class="headerlink" title="spark安装包下载"></a>spark安装包下载</h3><p>–&gt;<a href="http://spark.apache.org/downloads.html" target="_blank" rel="noopener">spark官网下载地址</a>&lt;–</p>
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%20%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E5%AE%98%E7%BD%91.png" alt="spark官网"></p>
+<p>这里我下载的2.4.4版本:spark-2.4.4-bin-hadoop2.7.tgz</p>
+<h3 id="解压缩"><a href="#解压缩" class="headerlink" title="解压缩"></a>解压缩</h3><p>将下载的tgz包放到自定义路径下，我这里放到的 <strong>/opt</strong> 下<br>然后就是解压了，linux下的解压命令是</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">tar -zxvf spark-2.4.4-bin-hadoop2.7.tgz</span><br></pre></td></tr></table></figure>
+
+<p>为了操作方便，将解压得到的spark-2.4.4-bin-hadoop2.7文件夹改名为spark-2.4.4：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mv spark-2.4.4-bin-hadoop2.7 spark-2.4.4</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>配置系统的环境变量：编辑 <strong>/etc/profile</strong> 文件，若执行命令提示没有 <strong>vim</strong> 时，用 <strong>vi</strong> 代替即可，也可以用如下命令安装即可</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install vim</span><br></pre></td></tr></table></figure>
+
+<p>编辑环境变量：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim  /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p>然后在文件的最后加上如下配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">Spark</span></span><br><span class="line">export SPARK_HOME=/opt/spark-2.4.4</span><br><span class="line">export PATH=$PATH:$SPARK_HOME/bin</span><br><span class="line"><span class="meta">#</span><span class="bash">Spark end</span></span><br></pre></td></tr></table></figure>
+
+<p>重新加载文件让其生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%20%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.png" alt="spark环境变量"></p>
+<p>然后键盘按下 <strong>“Esc”</strong> 键退出编辑模式，输入 <strong>:wq</strong> 保存即可</p>
+<p>重新加载文件让其生效</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置spark的配置文件之单机版"><a href="#配置spark的配置文件之单机版" class="headerlink" title="配置spark的配置文件之单机版"></a>配置spark的配置文件之单机版</h3><p>进入%SPARK_HOME%/conf路径，分别拷贝两个配置文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /opt/spark-2.4.4/conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 分别拷贝两个配置文件</span></span><br><span class="line">cp spark-env.sh.template spark-env.sh</span><br><span class="line">cp slaves.template  slaves</span><br></pre></td></tr></table></figure>
+
+<p>编辑spark-env.sh文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">export SPARK_MASTER_IP=192.168.1.210</span><br><span class="line">export SPARK_MASTER_PORT=7077</span><br></pre></td></tr></table></figure>
+
+<p>编辑slaves文件：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">localhost</span><br></pre></td></tr></table></figure>
+
+<p>测试环境配置是否成功</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd /opt/spark-2.4.4/bin/</span><br><span class="line">./run-example   SparkPi   10</span><br></pre></td></tr></table></figure>
+
+<p>出现如下图所示字样即配置成功</p>
+<p><img src="/2019/11/13/spark-%E5%8D%95%E6%9C%BA%20%E9%9B%86%E7%BE%A4%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/spark%E6%B5%8B%E8%AF%95.png" alt="spark测试"></p>
+<p>启动spark，bin目录下执行</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./spark-shell</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置spark的配置文件之单机版集群版"><a href="#配置spark的配置文件之单机版集群版" class="headerlink" title="配置spark的配置文件之单机版集群版"></a>配置spark的配置文件之单机版集群版</h3><p>spark 的一些默认端口</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">8080：master的webUI，sparkwebUI的端口</span><br><span class="line"></span><br><span class="line">7077：提交任务的端口</span><br><span class="line"></span><br><span class="line">8081：worker的webUI的端口</span><br><span class="line"></span><br><span class="line">18080：historyServer的webUI的端口</span><br><span class="line"></span><br><span class="line">4040：application的webUI的端口</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>环境搭建</tag>
+        <tag>spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>spark集群-SSH免密登录</title>
+    <url>/2019/11/15/spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/</url>
+    <content><![CDATA[<p>当我们在启动spark集群work节点的的时候，每次都需要输入每个节点服务器的密码，这样无疑是很麻烦的。设置SSH免密后就可跳过密码输入的步骤：</p>
+<p><img src="/2019/11/15/spark%E9%9B%86%E7%BE%A4-SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95.png" alt="免密登录"></p>
+<blockquote>
+<p>首先我们有多台服务器</p>
+</blockquote>
+<h3 id="生成SSH公钥"><a href="#生成SSH公钥" class="headerlink" title="生成SSH公钥"></a>生成SSH公钥</h3><p>过程中直接回车就好</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+
+<h3 id="分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys"><a href="#分别将每台服务器生成的-root-ssh-目录下的公钥文件复制成-authorized-keys" class="headerlink" title="分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 authorized_keys"></a>分别将每台服务器生成的 /root/.ssh 目录下的公钥文件复制成 <strong>authorized_keys</strong></h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cp id_rsa_pub authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置ssh免密登录"><a href="#配置ssh免密登录" class="headerlink" title="配置ssh免密登录"></a>配置ssh免密登录</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh-copy-id -i hostname # 或者ip</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>SSH免密登录</tag>
+        <tag>小技巧</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>war包部署spring cloud 工程</title>
+    <url>/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/</url>
+    <content><![CDATA[<p>最近接到一个任务：将spring cloud架构的系统部署到国产中间件：apusic(金蝶)中去。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于之前完全没有接触过这个中间件，第一个想到的就是不用springboot 自带的tomcat，将服务器打成war包部署到外部tomcat中去。部署成功后再将他搬到apusic(当时想的是毕竟GC，操作应该大同小异)。</p>
+<p>于是就开始了下面的操作:</p>
+<blockquote>
+<p>项目是gradle构建</p>
+</blockquote>
+<h3 id="更改build-gradle将springboot-服务打包成war"><a href="#更改build-gradle将springboot-服务打包成war" class="headerlink" title="更改build.gradle将springboot 服务打包成war"></a>更改build.gradle将springboot 服务打包成war</h3><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line">apply plugin: <span class="string">'org.springframework.boot'</span></span><br><span class="line">apply plugin: <span class="string">'eclipse'</span></span><br><span class="line">apply plugin: <span class="string">'net.saliman.properties'</span></span><br><span class="line">apply plugin: <span class="string">'io.spring.dependency-management'</span></span><br><span class="line">apply plugin: <span class="string">'war'</span> # 引入war插件</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    # 由于用外部tomcat启动 去掉继承的tomcat</span><br><span class="line">    providedRuntime <span class="string">'org.springframework.boot:spring-boot-starter-tomcat'</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法"><a href="#新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法" class="headerlink" title="新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法"></a>新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: hesong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Describe</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2019/10/21 18:17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MCStartApplication</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> builder.sources(ManagementCenterApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="file:///C:/Users/76797/Desktop/AAS-V9.0-201905221217/docs/html/guide/ch69s06.html">金蝶部署参考文档</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jps |grep Bootstrap | awk '&#123;print $1&#125;' | xargs kill -s 9</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>war包部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式-创建型模式（第2篇）</title>
+    <url>/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="创建型设计模式"><a href="#创建型设计模式" class="headerlink" title="创建型设计模式"></a>创建型设计模式</h2><blockquote>
+<p>通过”对象创建”模式绕开new, 来避免对象创建(new)过程中所导致的紧耦合(依赖具体类),从而支持对象创建的稳定.它是借口抽象后的第一步工作.</p>
+</blockquote>
+<p>上篇说道创建型设计模式一共五种，分别为：</p>
+<p>单例模式、抽象工厂模式、原型模式、建造者模式、工厂模式，下面分别详细的讲解这五种模式。</p>
+<p><a href="https://github.com/He-Song/designPattern" target="_blank" rel="noopener">各模式代码演示源码请访问</a></p>
+<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>单例模式就是采取一定的方法保证在整个软件系统中，对某个类只存在一个对象实例，并且该类只提供一个取得其对象实例的方法（静态方法）</p>
+<p>这里说道的采取<strong><em>一定的方法</em></strong>一般有以下几种：</p>
+<ol>
+<li><p>饿汉式（静态常量）</p>
+<ul>
+<li><p>构造器私有化（防止new）</p>
+</li>
+<li><p>类的内部创建对象（申明成员变量的时候直接new）</p>
+</li>
+<li><p>向外暴露一个静态的公共方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton01</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Singleton01 instance = <span class="keyword">new</span> Singleton01();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton01</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton01 <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span>  instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>饿汉式（静态代码块）</p>
+<ul>
+<li><p>同上</p>
+</li>
+<li><p>不同之处在于创建对象是在静态代码块中完成<br>饿汉式优缺点：</p>
+</li>
+<li><p>优点：简单，在类装载的时候就完成实例化，避免线程同步的问题</p>
+</li>
+<li><p>缺点：没有达到lazy loading 的效果，造成内存浪费</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton02</span></span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> Singleton02 instance;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> &#123;</span><br><span class="line">      instance = <span class="keyword">new</span> Singleton02();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton02</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton02 <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span>  instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>懒汉式（线程不安全）不可用 </p>
+<ul>
+<li><p>线程不安全 不可用 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton01</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Singleton01 instance;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton01</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;   </span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton01 <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 该方法不能保证线程安全</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == instance) &#123;</span><br><span class="line">          instance = <span class="keyword">new</span> Singleton01();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>懒汉式（线程安全，同步方法）</p>
+<ul>
+<li><p>可用但是在方法上加同步锁，效率低</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton02</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Singleton02 instance;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton02</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  方法上加同步锁，效率低</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> Singleton02 <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == instance) &#123;</span><br><span class="line">          instance = <span class="keyword">new</span> Singleton02();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>懒汉式（线程不安全， 同步代码块）</p>
+<ul>
+<li><p><strong>不可用</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton03</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Singleton03 instance;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton03</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton03 <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="comment">// 该方法不能保证线程安全</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == instance) &#123;</span><br><span class="line">          <span class="comment">//此处线程不安全</span></span><br><span class="line">          <span class="keyword">synchronized</span> (Singleton03<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">              instance = <span class="keyword">new</span> Singleton03();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>双重检查 </p>
+<ul>
+<li><p>提供一个静态的公共方法，加入双重检查的代码，解决线程安全的问题，同时解决懒加载的问题</p>
+</li>
+<li><p>同时保证了效率，<strong><em>推荐使用</em></strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton instance;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;   </span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == instance) &#123;</span><br><span class="line">          <span class="keyword">synchronized</span> (Singleton<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">              <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">                  instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>静态内部类</p>
+<ul>
+<li><p>外部类装载的时候，静态内部类并不会装载</p>
+</li>
+<li><p>当用到这个静态内部类的时候才回去装载，类在装载的时候没有线程同步的问题</p>
+</li>
+<li><p>因此该问题即解决了线程同步的问题同时也达到了懒加载的效果，<strong><em>建议使用</em></strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 静态内部类</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton1</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonInstance</span> </span>&#123;</span><br><span class="line">      <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Singleton1 INSTANCE = <span class="keyword">new</span> Singleton1();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton1 <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> SingletonInstance.INSTANCE;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>枚举</p>
+<ul>
+<li><p>借助jdk1.5中添加的枚举来实现单例模式，不仅能避免多线程同步的问题，而且还能防止反序列化重新创建对象</p>
+</li>
+<li><p>该方式时Effective Java 作者 Josh Bloch 提倡的方式</p>
+</li>
+<li><p><strong><em>推荐使用</em></strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 枚举</span></span><br><span class="line"><span class="comment">*/</span>   </span><br><span class="line"><span class="keyword">enum</span> Singleton2 &#123;</span><br><span class="line">  INSTANCE;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sayOK</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      System.out.println(<span class="string">"hha"</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><blockquote>
+<p>提供一个接口,让该接口负责创建一系列”相关或者相互依赖的对象”, 无需指定它们具体的类</p>
+</blockquote>
+<p><img src="/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/image-20211014161212640.png" alt="image-20211014161212640"></p>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><h4 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h4><blockquote>
+<p>定义一个用于创建对象的接口, 让子类决定实例化哪一个类.Factory Method 使得一个类的实例化延迟(目的:解耦)到子类</p>
+<p>一个对象对应一个工厂</p>
+</blockquote>
+<p><img src="/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/image-20211014155437368.png" alt="image-20211014155437368"></p>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><blockquote>
+<p>使用原型实例指定创建对象的种类,然后通过拷贝这些原型来创建新的对象</p>
+</blockquote>
+<p><img src="/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/image-20211014161916032.png" alt="image-20211014161916032"></p>
+<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h3><blockquote>
+<p>动机: 一个复杂对象的创建工作</p>
+</blockquote>
+<p><img src="/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/image-20211014162343359.png" alt="image-20211014162343359"></p>
+<blockquote>
+<p>定义: 将一个复杂的对象的构建与其表示相分离,使得同样的构建过程(稳定)可以创建不同的表示(变化)</p>
+</blockquote>
+<p><img src="/2020/05/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC2%E7%AF%87%EF%BC%89/image-20211014163459756.png" alt="image-20211014163459756"></p>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>DesignPattern</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式-概览与分类（第1篇）</title>
+    <url>/2020/05/03/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E6%A6%82%E8%A7%88%E4%B8%8E%E5%88%86%E7%B1%BB%EF%BC%88%E7%AC%AC1%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="设计模式的七大设计原则"><a href="#设计模式的七大设计原则" class="headerlink" title="设计模式的七大设计原则"></a>设计模式的七大设计原则</h2><ol>
+<li>单一职责原则：一个类应该只负责一项职责；</li>
+<li>接口隔离原则：客户端不应该依赖它不需要的接口，即一个类对另一个接口的依赖应该建立在最小的接口上；</li>
+<li>依赖倒转原则：<ul>
+<li>高层模块不应该依赖低层模块，两者都应该依赖其抽象</li>
+<li>抽象不要依赖细节，细节应该依赖抽象</li>
+<li>依赖倒转（倒置）的中心思想是面向接口编程</li>
+</ul>
+</li>
+<li>里氏替换原则：<ul>
+<li>里氏替换原则在1988年，由麻省理工学院的一位姓里的女士提出的</li>
+<li>如果对每个类型为T1的对象o1,都有类型为T2的对象o2,使得以T1定义的所有程序P在所有的对象o1都替换成o2时，程序P的行为没有发生变化，那么类型T2是类型T1的子类型。<br>换句话说，所有引用基类的地方必须能透明地使用其子类的对象</li>
+<li>在使用继承时，遵循里氏替换原则，在子类中尽量不要重写父类的方法</li>
+<li>里氏替换原则告诉我们，继承实际上是让两个类的耦合性增强了，<strong><em>在适当的情况下，可以通过聚合，组合，依赖来解决问题</em></strong>。</li>
+</ul>
+</li>
+<li>开闭原则：<ul>
+<li>是编程中最基础、最重要的设计原则</li>
+<li>一个软件实体类、模块和函数应该对扩展开发，对修改关闭。用抽象构建框架，用实现扩展细节</li>
+<li>当软件变化时，尽量通过扩展软件实体的行为来实现变化，而不是通过修改已有的代码来实现</li>
+<li>编程中遵循其他原则，以及使用设计模式的目的就是遵循开闭原则</li>
+</ul>
+</li>
+<li>迪米特法则<ul>
+<li>一个对象应对其他对象保持最少的了解</li>
+<li>类与类关系越密切，耦合性越大</li>
+<li>迪米特法则又叫<strong><em>最少知道原则</em></strong>，即一个类对自己依赖的类知道的越少越好。也就是说，对于被依赖的类不管多么复杂，都应将逻辑封装在类的内部。对外除了提供public方法不对外泄露任何信息</li>
+<li>迪米特法则还有一个更简单的定义：只与直接朋友通信（成员变量，方法参数，方法返回值中的类为直接朋友，局部变量中的类不是直接朋友）</li>
+</ul>
+</li>
+<li>合成复用原则：尽量使用合成/聚合的方式，而不是使用继承</li>
+</ol>
+<p>题外话： 接口和抽象类存在的价值在于设计，规范</p>
+<h2 id="设计模式类型"><a href="#设计模式类型" class="headerlink" title="设计模式类型"></a>设计模式类型</h2><p>设计模式分为三类，共23种</p>
+<ol>
+<li><p>创建型模式（共5种）：</p>
+<p> 单例模式、抽象工厂模式、原型模式、建造者模式、工厂模式</p>
+</li>
+<li><p>结构型模式（共7种）：</p>
+<p> 适配器模式、桥接模式、装饰者模式、组合模式、外观模式、享元模式、代理模式</p>
+</li>
+<li><p>行为型模式（共11种）：<br> 模板方法模式、命令模式、访问者模式、迭代器模式、观察者模式、中介者模式、备忘录模式、解释器模式、状态模式、策略模式、职责链模式</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>DesignPattern</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式-类图（第0篇）</title>
+    <url>/2020/05/03/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%B1%BB%E5%9B%BE%EF%BC%88%E7%AC%AC0%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="类图六大关系"><a href="#类图六大关系" class="headerlink" title="类图六大关系"></a>类图六大关系</h2><p>类与类之间的关系分为六种：</p>
+<ul>
+<li>依赖（Dependence）</li>
+<li>泛化/继承（Generalization）</li>
+<li>实现（Implementation）</li>
+<li>关联（Association）</li>
+<li>聚合（Aggregation）</li>
+<li>组合（Composition）</li>
+</ul>
+<h3 id="依赖关系（Dependence）"><a href="#依赖关系（Dependence）" class="headerlink" title="依赖关系（Dependence）"></a>依赖关系（Dependence）</h3><p>只要类中用到了对方即构成依赖关系。</p>
+<ul>
+<li>类的成员属性</li>
+<li>方法的返回类型</li>
+<li>方法接收的参数类型</li>
+<li>方法内部使用到</li>
+</ul>
+<h3 id="泛化关系（Generalization）"><a href="#泛化关系（Generalization）" class="headerlink" title="泛化关系（Generalization）"></a>泛化关系（Generalization）</h3><p>泛化关系其实就继承关系，它是依赖关系的特例</p>
+<h3 id="实现关系（Implementation）"><a href="#实现关系（Implementation）" class="headerlink" title="实现关系（Implementation）"></a>实现关系（Implementation）</h3><p>实际上就是A类实现B类，实现关系是依赖关系的特例</p>
+<h3 id="关联关系（Association）"><a href="#关联关系（Association）" class="headerlink" title="关联关系（Association）"></a>关联关系（Association）</h3><p>关联关系实际是 <strong><em>类与类之间的联系，他是依赖关系的特例</em></strong></p>
+<p>特点： 具有导航性：即单向关系与双向关系<br>具有多重性： 0 ， 1 ， *</p>
+<h3 id="聚合关系（Aggregation）"><a href="#聚合关系（Aggregation）" class="headerlink" title="聚合关系（Aggregation）"></a>聚合关系（Aggregation）</h3><p>聚合关系表示整体与部分的关系，<strong><em>部分可以与整体分开</em></strong>。<br>聚合关系是关联关系的特例,因此也具有导航性与多重性</p>
+<p>eg: person 与 IDCard 的关系</p>
+<h3 id="组合关系（Composition）"><a href="#组合关系（Composition）" class="headerlink" title="组合关系（Composition）"></a>组合关系（Composition）</h3><p>也是整体与部分的关系，只是<strong><em>整体与部分不可分开</em></strong></p>
+<p>eg: person 与 head 的关系</p>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>DesignPattern</tag>
+        <tag>类图</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>设计模式-结构型模式（第3篇）</title>
+    <url>/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><blockquote>
+<p>通过类继承或者对象组合获得灵活的结构，从而应对需求变化为对象的结构带来冲击</p>
+</blockquote>
+<p>结构型模式分类一共有7种:适配器模式、桥接模式、装饰者模式、组合模式、外观模式、享元模式、代理模式</p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><blockquote>
+</blockquote>
+<h3 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h3><blockquote>
+<p>定义：将抽象部分（业务功能）与实现部分（平台实现）分离，使它们都可以独立的变化。</p>
+</blockquote>
+<ol>
+<li>动机：<img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015145925175.png" alt="image-20211015145925175"></li>
+<li>类图：<img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015151235690.png" alt="image-20211015151235690"></li>
+<li>总结：<img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015151441376.png" alt="image-20211015151441376"></li>
+</ol>
+<h3 id="装饰者模式"><a href="#装饰者模式" class="headerlink" title="装饰者模式"></a>装饰者模式</h3><blockquote>
+<p>定义：动态（组合）地给一个对象增加一些额外的职责，就增加功能而言，Decorator模式比生成子类（继承）更加灵活（消除重复代码&amp;减少子类个数）</p>
+<p>场景：IO Stream</p>
+</blockquote>
+<ol>
+<li>动机</li>
+</ol>
+<p><img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015143650228.png" alt="image-20211015143650228"></p>
+<ol start="2">
+<li>类图：</li>
+</ol>
+<p><img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015145658681.png" alt="image-20211015145658681"></p>
+<ol start="3">
+<li><p>总结：</p>
+<p><img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015145728299.png" alt="image-20211015145728299"></p>
+</li>
+</ol>
+<h3 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h3><h3 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h3><h3 id="享元模式"><a href="#享元模式" class="headerlink" title="享元模式"></a>享元模式</h3><blockquote>
+<p>定义：运用<strong>共享</strong>技术有效地支持<strong>大量</strong>细粒度 的对象。</p>
+</blockquote>
+<ol>
+<li>动机：<img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015151922420.png" alt="image-20211015151922420"></li>
+<li>类图：<img src="/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/image-20211015152307177.png" alt="image-20211015152307177"></li>
+</ol>
+<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h3>]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>设计模式-行为型模式（第4篇）</title>
+    <url>/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="行为型模式"><a href="#行为型模式" class="headerlink" title="行为型模式"></a>行为型模式</h2><blockquote>
+<p>通过类继承或者对象组合来划分类与对象的职责，从而应对需求变化为多个交互的对象的冲击</p>
+</blockquote>
+<p>行为型型模式分类一共有7种：模板方法模式、命令模式、访问者模式、迭代器模式、观察者模式、中介者模式、备忘录模式、解释器模式、状态模式、策略模式、职责链模式</p>
+<h3 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h3><blockquote>
+<p>定义：定义一个操作中的算法的骨架（稳定），而将一些步骤延迟（变化）到子类。Template Method使得子类既可以不改变（复用）一个算法的结构也可重定义（override 重写）该算法的某些特定步骤。</p>
+</blockquote>
+<ol>
+<li><p>动机：<img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015103831904.png" alt="image-20211015103831904"></p>
+</li>
+<li><p>类图：</p>
+</li>
+</ol>
+<p><img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015104809193.png" alt="image-20211015104809193"></p>
+<h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><blockquote>
+<p>定义一系列算法，把他们一个一个封装起来，并且使他们可互相替换（变化）。该模式使得算法可独立于使用它的客户程序（稳定）而变化（扩展，子类化）</p>
+</blockquote>
+<ol>
+<li>类图：<img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015110528240.png" alt="image-20211015110528240"></li>
+</ol>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><blockquote>
+<p>定义：定义对象间的一种一对多（变化）的依赖关系，以便当一个对象（subject）的状态发生改变时，所有依赖于它的对象都得到通知并自动更新</p>
+<p>场景：消息订阅</p>
+</blockquote>
+<ol>
+<li><p>动机：<img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015111939215.png" alt="image-20211015111939215"></p>
+</li>
+<li><p>类图：</p>
+</li>
+</ol>
+<p><img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120058046.png" alt="image-20211015120058046"></p>
+<ol start="3">
+<li>总结：</li>
+</ol>
+<p><img src="/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120247286.png" alt="image-20211015120247286"></p>
+<h3 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h3><h3 id="访问者模式"><a href="#访问者模式" class="headerlink" title="访问者模式"></a>访问者模式</h3><h3 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h3><h3 id="中介者模式"><a href="#中介者模式" class="headerlink" title="中介者模式"></a>中介者模式</h3><h3 id="备忘录模式"><a href="#备忘录模式" class="headerlink" title="备忘录模式"></a>备忘录模式</h3><h3 id="解释器模式"><a href="#解释器模式" class="headerlink" title="解释器模式"></a>解释器模式</h3><h3 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h3><h3 id="职责链模式"><a href="#职责链模式" class="headerlink" title="职责链模式"></a>职责链模式</h3>]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>高可用性的mongo集群搭建</title>
+    <url>/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h4 id="mongoDB安装"><a href="#mongoDB安装" class="headerlink" title="mongoDB安装"></a>mongoDB安装</h4><p>参照：<a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/</a></p>
+<h5 id="配置yum管理包"><a href="#配置yum管理包" class="headerlink" title="配置yum管理包"></a>配置yum管理包</h5><ul>
+<li><p>在路径/etc/yum.repos.d/下创建文件mongodb-org-3.4.repo</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[mongodb-org-3.4]</span><br><span class="line">name&#x3D;MongoDB Repository</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;repo.mongodb.org&#x2F;yum&#x2F;redhat&#x2F;$releasever&#x2F;mongodb-org&#x2F;3.4&#x2F;x86_64&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;www.mongodb.org&#x2F;static&#x2F;pgp&#x2F;server-3.4.asc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装mongo</p>
+<figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line">yum <span class="keyword">install</span> -y mongodb-org</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mongo相关操作</p>
+</li>
+<li><p>创建用户</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">mongo</span>       <span class="comment">//启动Mongo shell命令</span></span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">admin</span>   <span class="comment">//切换到admin数据库</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;<span class="attribute">user</span>:<span class="string">"root"</span>,<span class="attribute">pwd</span>:<span class="string">"123456"</span>,<span class="attribute">roles</span>:[<span class="string">"root"</span>]&#125;)    <span class="comment">//创建用户</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.auth</span>(<span class="string">"root"</span>,<span class="string">"123456"</span>)    <span class="comment">//验证用户创建是否成功</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="高可用性的mongo集群"><a href="#高可用性的mongo集群" class="headerlink" title="高可用性的mongo集群"></a>高可用性的mongo集群</h4><p>参照：<a href="http://www.lanceyan.com/tech/arch/mongodb_shard1.html" target="_blank" rel="noopener">http://www.lanceyan.com/tech/arch/mongodb_shard1.html</a></p>
+<h5 id="三台服务器分配"><a href="#三台服务器分配" class="headerlink" title="三台服务器分配"></a>三台服务器分配</h5><p>按表格分别在各服务器进行目录创建：</p>
+<ul>
+<li>192.168.1.91</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1主节点</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2副本</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3仲裁</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<ul>
+<li>192.168.1.92</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1仲裁</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2主节点</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3副本</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<ul>
+<li>192.168.1.93</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1副本</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2仲裁</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3主节点</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<h5 id="启动Config-server"><a href="#启动Config-server" class="headerlink" title="启动Config server"></a>启动Config server</h5><ol>
+<li><p>启动Config server</p>
+<ul>
+<li><p>分别配置三台config服务的配置文件，分别在对应config server的conf目录下(/data/mongodbtest/config/conf/)创建mongo_config.conf文件</p>
+<figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"><span class="string">storage:</span></span><br><span class="line"><span class="string">dbPath:</span> <span class="regexp">/data/</span>mongodbtest<span class="regexp">/config/</span>data</span><br><span class="line"><span class="string">indexBuildRetry:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">systemLog:</span></span><br><span class="line"><span class="string">destination:</span> file</span><br><span class="line"><span class="string">path:</span> <span class="regexp">/data/</span>mongodbtest<span class="regexp">/config/</span>log/config.log</span><br><span class="line"><span class="string">net:</span></span><br><span class="line"><span class="string">port:</span> <span class="number">21001</span></span><br><span class="line"><span class="string">sharding:</span></span><br><span class="line"><span class="string">clusterRole:</span> configsvr</span><br><span class="line"><span class="string">replication:</span></span><br><span class="line"><span class="string">replSetName:</span> docdetection</span><br><span class="line"><span class="string">processManagement:</span></span><br><span class="line"><span class="string">fork:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动config配置服务</p>
+<figure class="highlight arduino"><table><tr><td class="code"><pre><span class="line">mongod --<span class="built_in">config</span> /data/mongodbtest/<span class="built_in">config</span>/conf/mongo_config.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>初始化config复本集</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment">#设置config副本集，登录其中一个config服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:21001</span><br><span class="line">   </span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line">   </span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config =&#123;_id:<span class="string">'docdetection'</span>,members:[</span><br><span class="line">            &#123;_id:0,host:<span class="string">'192.168.1.91:21001'</span>,priority:3&#125;,</span><br><span class="line">            &#123;_id:1,host:<span class="string">'192.168.1.92:21001'</span>,priority:2&#125;,</span><br><span class="line">            &#123;_id:2,host:<span class="string">'192.168.1.93:21001'</span>,priority:1&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125; </span><br><span class="line">   </span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br><span class="line">   </span><br><span class="line"><span class="comment">#初始化结束（注意关闭各服务器防火墙）</span></span><br><span class="line">&#123; <span class="string">"ok"</span> : 1 &#125;</span><br><span class="line">   </span><br><span class="line"><span class="comment">#查看状态</span></span><br><span class="line"> rs.status()</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动Shard-server（分片服务）"><a href="#启动Shard-server（分片服务）" class="headerlink" title="启动Shard server（分片服务）"></a>启动Shard server（分片服务）</h5></li>
+<li><p>启动各分片服务</p>
+<ul>
+<li><p>分别到各服务器上各shard的conf目录下建文件mongo_config.conf。eg:192.168.1.91</p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="comment"># shard1</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard1/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard1/log/shard1.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22001</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard1</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shard2</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard2/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard2/log/shard2.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22002</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard2</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shard3</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard3/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard3/log/shard3.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22003</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard3</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动shard分片服务(3*3=9个)</p>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard1/</span>conf/mongo_config.conf</span><br><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard2/</span>conf/mongo_config.conf</span><br><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard3/</span>conf/mongo_config.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>初始化各分片服务器副本集</p>
+<ul>
+<li><p>设置第一个分片副本集:shard1（保证各副本已启动）<strong>注：priority 的值决定主（值大）从关系；arbiterOnly 指定仲裁节点</strong></p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment">#设置第一个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22001</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard1"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22001"</span>,priority:2&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22001"</span>,arbiterOnly:true&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22001"</span>,priority:1&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置第二个分片副本集：shard2</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment">#设置第二个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22002</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard2"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22002"</span>,priority:1&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22002"</span>,priority:2&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22002"</span>,arbiterOnly:true&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置第三个分片副本集：shard3</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line"><span class="comment">#设置第三个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22003</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard3"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22003"</span>,arbiterOnly:true&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22003"</span>,priority:1&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22003"</span>,priority:2&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动mongos路由服务"><a href="#启动mongos路由服务" class="headerlink" title="启动mongos路由服务"></a>启动mongos路由服务</h5></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>配置mongos服务的配置文件，对应的conf目录下创建mongo_config.conf文件</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">systemLog:</span><br><span class="line">destination: file</span><br><span class="line">path: /data/mongodbtest/mongos/log/mongos.log</span><br><span class="line">net:</span><br><span class="line">port: <span class="number">20001</span></span><br><span class="line">sharding:</span><br><span class="line">configDB: docdetection/<span class="number">192.168</span><span class="number">.1</span><span class="number">.91</span>:<span class="number">21001</span>,<span class="number">192.168</span><span class="number">.1</span><span class="number">.92</span>:<span class="number">21001</span>,<span class="number">192.168</span><span class="number">.1</span><span class="number">.93</span>:<span class="number">21001</span></span><br><span class="line">processManagement:</span><br><span class="line">fork: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动config配置服务</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">mongos --config <span class="regexp">/data/m</span>ongodbtest<span class="regexp">/mongos/</span>conf<span class="regexp">/mongo_config.conf</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="整合配置、路由、分片服务器"><a href="#整合配置、路由、分片服务器" class="headerlink" title="整合配置、路由、分片服务器"></a>整合配置、路由、分片服务器</h5><p>整合配置服务器、路由服务器，各个分片服务器</p>
+</li>
+</ul>
+<ol>
+<li><p>整合配置、路由、分片服务器</p>
+<ul>
+<li><p>目前搭建了mongodb配置服务器、路由服务器，各个分片服务器，不过应用程序连接到 mongos 路由服务器并不能使用分片机制，还需要在程序里设置分片配置，让分片生效。<strong>分别连接三个mongos，添加分片副本集。</strong></p>
+<figure class="highlight dns"><table><tr><td class="code"><pre><span class="line">#设置分片配置，登录mongos路由服务器</span><br><span class="line">/usr/bin/mongo <span class="number">127.0.0.1</span>:<span class="number">20001</span></span><br><span class="line"></span><br><span class="line">#使用admin数据库</span><br><span class="line">use admin</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">1</span></span><br><span class="line">sh.addShard("shard<span class="number">1/192.168.1</span>.<span class="number">91:22001,192</span>.<span class="number">168.1.92</span>:<span class="number">22001,192.168</span>.<span class="number">1.93:22001</span>")</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">2</span></span><br><span class="line">sh.addShard("shard<span class="number">2/192.168.1</span>.<span class="number">91:22002,192</span>.<span class="number">168.1.92</span>:<span class="number">22002,192.168</span>.<span class="number">1.93:22002</span>")</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">3</span></span><br><span class="line">sh.addShard("shard<span class="number">3/192.168.1</span>.<span class="number">91:22003,192</span>.<span class="number">168.1.92</span>:<span class="number">22003,192.168</span>.<span class="number">1.93:22003</span>")</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>添加创建用户</p>
+<ul>
+<li><p>集群管理员账号（mongos和配置服务器的集群管理员用户是可以通用的）</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line">#以下是创建集群管理员用户步骤（连接其中一台<span class="selector-tag">Mongos</span>服务上执行即可）</span><br><span class="line">#登录<span class="selector-tag">mongos</span>路由服务器</span><br><span class="line">/<span class="selector-tag">usr</span>/<span class="selector-tag">bin</span>/<span class="selector-tag">mongo</span> <span class="selector-tag">127</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span><span class="selector-pseudo">:20001</span></span><br><span class="line">#使用<span class="selector-tag">admin</span>数据库</span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">admin</span></span><br><span class="line">#创建账号及指定权限</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;</span><br><span class="line">  <span class="attribute">user</span>: <span class="string">"adminRoot"</span>,</span><br><span class="line">  <span class="attribute">pwd</span>: <span class="string">"adminbear"</span>,</span><br><span class="line">     <span class="attribute">roles</span>: [</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"root"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;,</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"clusterAdmin"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;,</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"userAdmin"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据库用户</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line">#登录<span class="selector-tag">mongos</span>路由服务器</span><br><span class="line">/<span class="selector-tag">usr</span>/<span class="selector-tag">bin</span>/<span class="selector-tag">mongo</span> <span class="selector-tag">127</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span><span class="selector-pseudo">:20001</span></span><br><span class="line">#以下是为数据库名<span class="selector-tag">mongoTest</span>，创建数据库用户</span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">mongoTest</span>;</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;</span><br><span class="line">  <span class="attribute">user</span>: <span class="string">"mongoTestUser"</span>,</span><br><span class="line">  <span class="attribute">pwd</span>: <span class="string">"bear"</span>,</span><br><span class="line">  <span class="attribute">roles</span>: [</span><br><span class="line">      &#123; <span class="attribute">role</span>: <span class="string">"readWrite"</span>, <span class="attribute">db</span>: <span class="string">" mongoTest"</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>目前配置服务、路由服务、分片服务、副本集服务都已经串联起来了，但我们的目的是希望插入数据，数据能够自动分片。连接在mongos上，准备让指定的数据库、指定的集合分片生效。</p>
+</li>
+</ul>
+</li>
+<li><p>创建数据库，让指定数据库分片生效</p>
+<ol>
+<li><p>建库、表、指定应用分片的库</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">#登录mongos路由服务器</span></span><br><span class="line">/usr/bin/mongo 127.0.0.1:20001</span><br><span class="line"><span class="comment">#创建或者使用mongoTest数据库</span></span><br><span class="line"><span class="keyword">use</span> mongoTest;</span><br><span class="line"><span class="comment">#创建mongoTest数据库中的集合</span></span><br><span class="line">db.createCollection("table1")  <span class="comment">#新建集合：table1</span></span><br><span class="line"> ·</span><br><span class="line"> ·</span><br><span class="line"> ·</span><br><span class="line"><span class="comment">#切换到admin数据库</span></span><br><span class="line"><span class="keyword">use</span> <span class="keyword">admin</span></span><br><span class="line"><span class="comment">#指定testdb分片生效，mongoTest为数据库名称</span></span><br><span class="line">db.runCommand( &#123; enablesharding :<span class="string">"mongoTest"</span>&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定分片的表。两种分片方式： Hashed Shard Key与Ranged Shard Key</p>
+<ul>
+<li><p>Hashed Shard Key：它采用字段的索引哈希值作为 shard key 的取值，这样做可以保证数据的均匀分布。在 mongos 和各个 shard 集群之间存在一个哈希值计算方法，所有的数据在迁移时都是根据这个方法来计算数据应当被迁移到什么地方。当 mongos 接收到一条语句时，通常他会把这条语句广播到所有的 shard 上去执行。</p>
+</li>
+<li><p>Ranged Shard Key: 根据 shard key 的取值，它把数据切分成连续的几个区间。取值相近的纪录会放进同一个 shard 服务器。好处是查询连续取值纪录时，查询效率可以得到保证。当数据库查询语句发送到 mongos 中时，mongos 会很快的找到目标 shard，而且不需要将语句发送到所有的 shard 上，一般只需要少量的 shard 就可以完成查询操作。缺点是不能保证数据的平均分配，在数据插入和修改时会产生比较严重的性能瓶颈</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line">#指定数据库里需要分片的集合和片键，<span class="selector-tag">table1</span>为<span class="selector-tag">mongoTest</span>数据库中集合名称</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.runCommand</span>(&#123;<span class="attribute">shardcollection</span>:<span class="string">"mongoTest.table1"</span>,<span class="attribute">key</span>:&#123;<span class="string">"ZZJGDM"</span>: <span class="string">"hashed"</span>&#125;&#125;) <span class="comment">//Hashed Shard Key</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.runCommand</span>(&#123;<span class="attribute">shardcollection</span>:<span class="string">"mongoTest.table1"</span>,<span class="attribute">key</span>:&#123;<span class="attribute">_id</span>:<span class="number">1</span>&#125;&#125;)<span class="comment">//    Ranged Shard Key</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>mongo集群</tag>
+        <tag>部署</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Openwrt + Tplink ACAP deploy</title>
+    <url>/2023/06/04/Openwrt-Tplink-ACAP-deploy/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>最近想把家里网络升级一下 于是购置了一套Tplink APAC 组网设备<br>家里已有网络环境 光纤入户-&gt; 一台N3540主路由（拨号&amp;DHCP）-&gt; Redmi AC2100(桥接&amp; 提供wifi)<br>主路由 192.168.100.1</p>
+</blockquote>
+<h2 id="组网"><a href="#组网" class="headerlink" title="组网"></a>组网</h2><p>需求： </p>
+<ol>
+<li>家里所有设备在同一网段，正常上网（包括科学上网）</li>
+<li>商云App可以查看AP状态与管理所有AP</li>
+</ol>
+<h3 id="方案一：TP-Link-作为二级路由"><a href="#方案一：TP-Link-作为二级路由" class="headerlink" title="方案一：TP-Link 作为二级路由"></a>方案一：TP-Link 作为二级路由</h3><p>N3540仍然做主路由，Lan口接AC交换机的Wan口，AC Wan口自动获取Ip 或者静态IP都可，Lan口开启DHCP。<br>优点：该方案是可用的，商云APP可以正常发现并管理AP设备，配置简单现有网络基础上不需要做太多的变化，只需替换原来的Redmi 路由器即可<br>缺点：不满足我的需求1，主路由与AP不在同一网段。多一级路由对网络传输会有损耗也增加了网络的复杂度<br>总结：该方案不推荐</p>
+<h3 id="方案二：TP-Link-AC-仅作为交换机使用"><a href="#方案二：TP-Link-AC-仅作为交换机使用" class="headerlink" title="方案二：TP-Link AC 仅作为交换机使用"></a>方案二：TP-Link AC 仅作为交换机使用</h3><p>AC交换机先不接上游网络（Wan先不接线）Lan口连接所有AP,通过wifi或者网线设置AC,AC Wan口可不做设置或设置自动获取IP，AC Lan口设置静态IP（与主路由保持同一网段如：192.168.100.233）并关闭DHCP服务。N3540仍然做主路由，最后N3540Lan口接AC交换机的Lan口。<br>优点：整个网络只有主路由提供DHCP服务，所以所有设备均在同一网段，且所有设备能正常上网并跑满带宽<br>缺点：由于AC Wan口没有使用仅作为交换机，所有没有接入互联网不能使用商云APP(咨询了客服是这样解释的)也就不能通过商云app 管理AP,但是可以通过AC IP(192.168.100.233)进入网页UI进行查看网络情况<br>总结：方案可行，没有强迫症对商云APP没有执念可以尝试</p>
+<h3 id="方案三：N3540做旁路由（也叫旁路网关）"><a href="#方案三：N3540做旁路由（也叫旁路网关）" class="headerlink" title="方案三：N3540做旁路由（也叫旁路网关）"></a>方案三：N3540做旁路由（也叫旁路网关）</h3><p>经过前面两种方案的尝试，方案都并不完美，最终通过一番搜索与学习，最终决定将主路由用作旁路由，AC升级作为主路由。<br>首先光猫网线出来直接接入ACWan口，进入路由器控制中心Wan口输入账号密码进行拨号,Lan口设置静态IP(如：192.168.100.233),开启DHCP.<br>image.png<br>N3540做旁路由Lan口接入AC Lan口，修改设置：</p>
+<ol>
+<li>Lan口选择静态地址（与AC主路由保持网段一致，如192.168.100.1）；网关设置成AC 主路由地址（192.168.100.233）这很重要。</li>
+<li>Lan口关闭DHCP服务</li>
+<li>进入防火墙，修改Lan 防火墙设置，勾选“IP 动态伪装”<br>至此N3540设置完毕。至此N3540仅作为一个网络设备不会对整个网络有任何影响。连接APwifi 手机等设备也能正常上网，但是还不能科学上网。还要进行一部配置，将联网设备的网关指向旁路由。该配置有两种方式：非侵入式与侵入式</li>
+<li>非侵入式：联网设备进行联网配置，自动获取IP改为手动设置 需要特殊注意的是将网关配置成旁路由IP（即192.168.100.1）重新连接后即可上网。该方案优点就是可以控制哪些设备需要经旁路由。缺点就是比较麻烦 每个需要科学上网的设备都需要手动配置，</li>
+<li>侵入式：基于上面一种方案，该方案是将该配置通过DHCP下发给所有联网设备，在AC Lan口的DHCP配置中填入旁路由IP（即192.168.100.1）所有设备重新联网即可。该方案也有缺点，有侵入性，如果旁路由挂掉 整个网络即瘫痪（该场景应该很少）<br>至此所有配置完成。<br>优点：满足我的两点基本需求。所有设备正常上网，跑满带宽。商云APP 正常发现并管理AP设备<br>缺点：配置稍微麻烦一点<br>总结：目前是我的最佳解决方案，推荐。如果后续有方案变更再做更新。有小伙伴有更好的方式可进行讨论分享[emoji:抱拳]</li>
+</ol>
+]]></content>
+      <categories>
+        <category>网络</category>
+        <category>家庭组网</category>
+      </categories>
+  </entry>
+</search>

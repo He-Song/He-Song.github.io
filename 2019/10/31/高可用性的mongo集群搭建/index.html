@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/s_lowercase_32px_1168328_easyicon.net.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/s_lowercase_16px_1168328_easyicon.net.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mongo集群,部署," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Mr.He' BLOG" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="mongoDB安装参照：https:&#x2F;&#x2F;docs.mongodb.com&#x2F;manual&#x2F;tutorial&#x2F;install-mongodb-on-red-hat&#x2F; 配置yum管理包 在路径&#x2F;etc&#x2F;yum.repos.d&#x2F;下创建文件mongodb-org-3.4.repo 123456[mongodb-org-3.4]name&#x3D;MongoDB Repositorybaseurl&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高可用性的mongo集群搭建">
+<meta property="og:url" content="http://blog.hexiaosong.xyz/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Mr.He&#39; BLOG">
+<meta property="og:description" content="mongoDB安装参照：https:&#x2F;&#x2F;docs.mongodb.com&#x2F;manual&#x2F;tutorial&#x2F;install-mongodb-on-red-hat&#x2F; 配置yum管理包 在路径&#x2F;etc&#x2F;yum.repos.d&#x2F;下创建文件mongodb-org-3.4.repo 123456[mongodb-org-3.4]name&#x3D;MongoDB Repositorybaseurl&#x3D;">
+<meta property="article:published_time" content="2019-10-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-04T06:55:44.434Z">
+<meta property="article:author" content="song">
+<meta property="article:tag" content="mongo集群">
+<meta property="article:tag" content="部署">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.hexiaosong.xyz/2019/10/31/高可用性的mongo集群搭建/"/>
+
+
+
+
+
+  <title>高可用性的mongo集群搭建 | Mr.He' BLOG</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Mr.He' BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">生活不止眼前的枸杞</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.hexiaosong.xyz/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="song">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/lynne.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr.He' BLOG">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">高可用性的mongo集群搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-31T00:00:00+08:00">
+                2019-10-31
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-04T14:55:44+08:00">
+                2023-06-04
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E4%BD%9C%E4%B8%8E%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index">
+                    <span itemprop="name">工作与技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/10/31/%E9%AB%98%E5%8F%AF%E7%94%A8%E6%80%A7%E7%9A%84mongo%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" class="leancloud_visitors" data-flag-title="高可用性的mongo集群搭建">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.2k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  10
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="mongoDB安装"><a href="#mongoDB安装" class="headerlink" title="mongoDB安装"></a>mongoDB安装</h4><p>参照：<a href="https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/" target="_blank" rel="noopener">https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/</a></p>
+<h5 id="配置yum管理包"><a href="#配置yum管理包" class="headerlink" title="配置yum管理包"></a>配置yum管理包</h5><ul>
+<li><p>在路径/etc/yum.repos.d/下创建文件mongodb-org-3.4.repo</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[mongodb-org-3.4]</span><br><span class="line">name&#x3D;MongoDB Repository</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;repo.mongodb.org&#x2F;yum&#x2F;redhat&#x2F;$releasever&#x2F;mongodb-org&#x2F;3.4&#x2F;x86_64&#x2F;</span><br><span class="line">gpgcheck&#x3D;1</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;www.mongodb.org&#x2F;static&#x2F;pgp&#x2F;server-3.4.asc</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装mongo</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum <span class="keyword">install</span> -y mongodb-org</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>mongo相关操作</p>
+</li>
+<li><p>创建用户</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">mongo</span>       <span class="comment">//启动Mongo shell命令</span></span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">admin</span>   <span class="comment">//切换到admin数据库</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;<span class="attribute">user</span>:<span class="string">"root"</span>,<span class="attribute">pwd</span>:<span class="string">"123456"</span>,<span class="attribute">roles</span>:[<span class="string">"root"</span>]&#125;)    <span class="comment">//创建用户</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.auth</span>(<span class="string">"root"</span>,<span class="string">"123456"</span>)    <span class="comment">//验证用户创建是否成功</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="高可用性的mongo集群"><a href="#高可用性的mongo集群" class="headerlink" title="高可用性的mongo集群"></a>高可用性的mongo集群</h4><p>参照：<a href="http://www.lanceyan.com/tech/arch/mongodb_shard1.html" target="_blank" rel="noopener">http://www.lanceyan.com/tech/arch/mongodb_shard1.html</a></p>
+<h5 id="三台服务器分配"><a href="#三台服务器分配" class="headerlink" title="三台服务器分配"></a>三台服务器分配</h5><p>按表格分别在各服务器进行目录创建：</p>
+<ul>
+<li>192.168.1.91</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1主节点</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2副本</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3仲裁</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<ul>
+<li>192.168.1.92</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1仲裁</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2主节点</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3副本</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<ul>
+<li>192.168.1.93</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>端口</th>
+<th>日志路径</th>
+<th>数据路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mongos</td>
+<td>20001</td>
+<td>mkdir -p /data/mongodbtest/mongos/log</td>
+<td>–</td>
+</tr>
+<tr>
+<td>Config server</td>
+<td>21001</td>
+<td>mkdir -p /data/mongodbtest/config/log</td>
+<td>mkdir -p /data/mongodbtest/config/data</td>
+</tr>
+<tr>
+<td>Shard server1副本</td>
+<td>22001</td>
+<td>mkdir -p /data/mongodbtest/shard1/log</td>
+<td>mkdir -p /data/mongodbtest/shard1/data</td>
+</tr>
+<tr>
+<td>Shard server2仲裁</td>
+<td>22002</td>
+<td>mkdir -p /data/mongodbtest/shard2/log</td>
+<td>mkdir -p /data/mongodbtest/shard2/data</td>
+</tr>
+<tr>
+<td>Shard server3主节点</td>
+<td>22003</td>
+<td>mkdir -p /data/mongodbtest/shard3/log</td>
+<td>mkdir -p /data/mongodbtest/shard3/data</td>
+</tr>
+</tbody></table>
+<h5 id="启动Config-server"><a href="#启动Config-server" class="headerlink" title="启动Config server"></a>启动Config server</h5><ol>
+<li><p>启动Config server</p>
+<ul>
+<li><p>分别配置三台config服务的配置文件，分别在对应config server的conf目录下(/data/mongodbtest/config/conf/)创建mongo_config.conf文件</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">storage:</span></span><br><span class="line"><span class="string">dbPath:</span> <span class="regexp">/data/</span>mongodbtest<span class="regexp">/config/</span>data</span><br><span class="line"><span class="string">indexBuildRetry:</span> <span class="literal">true</span></span><br><span class="line"><span class="string">systemLog:</span></span><br><span class="line"><span class="string">destination:</span> file</span><br><span class="line"><span class="string">path:</span> <span class="regexp">/data/</span>mongodbtest<span class="regexp">/config/</span>log/config.log</span><br><span class="line"><span class="string">net:</span></span><br><span class="line"><span class="string">port:</span> <span class="number">21001</span></span><br><span class="line"><span class="string">sharding:</span></span><br><span class="line"><span class="string">clusterRole:</span> configsvr</span><br><span class="line"><span class="string">replication:</span></span><br><span class="line"><span class="string">replSetName:</span> docdetection</span><br><span class="line"><span class="string">processManagement:</span></span><br><span class="line"><span class="string">fork:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动config配置服务</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongod --<span class="built_in">config</span> /data/mongodbtest/<span class="built_in">config</span>/conf/mongo_config.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>初始化config复本集</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置config副本集，登录其中一个config服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:21001</span><br><span class="line">   </span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line">   </span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config =&#123;_id:<span class="string">'docdetection'</span>,members:[</span><br><span class="line">            &#123;_id:0,host:<span class="string">'192.168.1.91:21001'</span>,priority:3&#125;,</span><br><span class="line">            &#123;_id:1,host:<span class="string">'192.168.1.92:21001'</span>,priority:2&#125;,</span><br><span class="line">            &#123;_id:2,host:<span class="string">'192.168.1.93:21001'</span>,priority:1&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125; </span><br><span class="line">   </span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br><span class="line">   </span><br><span class="line"><span class="comment">#初始化结束（注意关闭各服务器防火墙）</span></span><br><span class="line">&#123; <span class="string">"ok"</span> : 1 &#125;</span><br><span class="line">   </span><br><span class="line"><span class="comment">#查看状态</span></span><br><span class="line"> rs.status()</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动Shard-server（分片服务）"><a href="#启动Shard-server（分片服务）" class="headerlink" title="启动Shard server（分片服务）"></a>启动Shard server（分片服务）</h5></li>
+<li><p>启动各分片服务</p>
+<ul>
+<li><p>分别到各服务器上各shard的conf目录下建文件mongo_config.conf。eg:192.168.1.91</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># shard1</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard1/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard1/log/shard1.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22001</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard1</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shard2</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard2/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard2/log/shard2.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22002</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard2</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># shard3</span></span><br><span class="line"><span class="attr">storage</span>:<span class="string"></span></span><br><span class="line"><span class="attr">dbPath</span>: <span class="string">/data/mongodbtest/shard3/data</span></span><br><span class="line"><span class="attr">indexBuildRetry</span>: <span class="string">true</span></span><br><span class="line"><span class="attr">systemLog</span>:<span class="string"></span></span><br><span class="line"><span class="attr">destination</span>: <span class="string">file</span></span><br><span class="line"><span class="attr">path</span>: <span class="string">/data/mongodbtest/shard3/log/shard3.log</span></span><br><span class="line"><span class="attr">net</span>:<span class="string"></span></span><br><span class="line"><span class="attr">port</span>: <span class="string">22003</span></span><br><span class="line"><span class="attr">sharding</span>:<span class="string"></span></span><br><span class="line"><span class="attr">clusterRole</span>: <span class="string">shardsvr</span></span><br><span class="line"><span class="attr">replication</span>:<span class="string"></span></span><br><span class="line"><span class="attr">replSetName</span>: <span class="string">shard3</span></span><br><span class="line"><span class="attr">processManagement</span>:<span class="string"></span></span><br><span class="line"><span class="attr">fork</span>: <span class="string">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动shard分片服务(3*3=9个)</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard1/</span>conf/mongo_config.conf</span><br><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard2/</span>conf/mongo_config.conf</span><br><span class="line">mongod --config <span class="meta-keyword">/data/</span>mongodbtest<span class="meta-keyword">/shard3/</span>conf/mongo_config.conf</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>初始化各分片服务器副本集</p>
+<ul>
+<li><p>设置第一个分片副本集:shard1（保证各副本已启动）<strong>注：priority 的值决定主（值大）从关系；arbiterOnly 指定仲裁节点</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置第一个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22001</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard1"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22001"</span>,priority:2&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22001"</span>,arbiterOnly:true&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22001"</span>,priority:1&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置第二个分片副本集：shard2</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置第二个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22002</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard2"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22002"</span>,priority:1&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22002"</span>,priority:2&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22002"</span>,arbiterOnly:true&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置第三个分片副本集：shard3</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置第三个分片副本集，登录其中一个分片服务器</span></span><br><span class="line">/usr/bin/mongo  127.0.0.1:22003</span><br><span class="line"><span class="comment">#使用admin数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment">#定义副本集配置</span></span><br><span class="line">config = &#123; _id:<span class="string">"shard3"</span>, members:[</span><br><span class="line">                   &#123;_id:0,host:<span class="string">"192.168.1.91:22003"</span>,arbiterOnly:true&#125;,</span><br><span class="line">                   &#123;_id:1,host:<span class="string">"192.168.1.92:22003"</span>,priority:1&#125;,</span><br><span class="line">                   &#123;_id:2,host:<span class="string">"192.168.1.93:22003"</span>,priority:2&#125;</span><br><span class="line">              ]</span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">#初始化副本集配置</span></span><br><span class="line">rs.initiate(config);</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动mongos路由服务"><a href="#启动mongos路由服务" class="headerlink" title="启动mongos路由服务"></a>启动mongos路由服务</h5></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>配置mongos服务的配置文件，对应的conf目录下创建mongo_config.conf文件</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">systemLog:</span><br><span class="line">destination: file</span><br><span class="line">path: /data/mongodbtest/mongos/log/mongos.log</span><br><span class="line">net:</span><br><span class="line">port: <span class="number">20001</span></span><br><span class="line">sharding:</span><br><span class="line">configDB: docdetection/<span class="number">192.168</span><span class="number">.1</span><span class="number">.91</span>:<span class="number">21001</span>,<span class="number">192.168</span><span class="number">.1</span><span class="number">.92</span>:<span class="number">21001</span>,<span class="number">192.168</span><span class="number">.1</span><span class="number">.93</span>:<span class="number">21001</span></span><br><span class="line">processManagement:</span><br><span class="line">fork: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过配置文件分别启动config配置服务</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongos --config <span class="regexp">/data/m</span>ongodbtest<span class="regexp">/mongos/</span>conf<span class="regexp">/mongo_config.conf</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="整合配置、路由、分片服务器"><a href="#整合配置、路由、分片服务器" class="headerlink" title="整合配置、路由、分片服务器"></a>整合配置、路由、分片服务器</h5><p>整合配置服务器、路由服务器，各个分片服务器</p>
+</li>
+</ul>
+<ol>
+<li><p>整合配置、路由、分片服务器</p>
+<ul>
+<li><p>目前搭建了mongodb配置服务器、路由服务器，各个分片服务器，不过应用程序连接到 mongos 路由服务器并不能使用分片机制，还需要在程序里设置分片配置，让分片生效。<strong>分别连接三个mongos，添加分片副本集。</strong></p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#设置分片配置，登录mongos路由服务器</span><br><span class="line">/usr/bin/mongo <span class="number">127.0.0.1</span>:<span class="number">20001</span></span><br><span class="line"></span><br><span class="line">#使用admin数据库</span><br><span class="line">use admin</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">1</span></span><br><span class="line">sh.addShard("shard<span class="number">1/192.168.1</span>.<span class="number">91:22001,192</span>.<span class="number">168.1.92</span>:<span class="number">22001,192.168</span>.<span class="number">1.93:22001</span>")</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">2</span></span><br><span class="line">sh.addShard("shard<span class="number">2/192.168.1</span>.<span class="number">91:22002,192</span>.<span class="number">168.1.92</span>:<span class="number">22002,192.168</span>.<span class="number">1.93:22002</span>")</span><br><span class="line"></span><br><span class="line">#串联路由服务器与分片副本集<span class="number">3</span></span><br><span class="line">sh.addShard("shard<span class="number">3/192.168.1</span>.<span class="number">91:22003,192</span>.<span class="number">168.1.92</span>:<span class="number">22003,192.168</span>.<span class="number">1.93:22003</span>")</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>添加创建用户</p>
+<ul>
+<li><p>集群管理员账号（mongos和配置服务器的集群管理员用户是可以通用的）</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#以下是创建集群管理员用户步骤（连接其中一台<span class="selector-tag">Mongos</span>服务上执行即可）</span><br><span class="line">#登录<span class="selector-tag">mongos</span>路由服务器</span><br><span class="line">/<span class="selector-tag">usr</span>/<span class="selector-tag">bin</span>/<span class="selector-tag">mongo</span> <span class="selector-tag">127</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span><span class="selector-pseudo">:20001</span></span><br><span class="line">#使用<span class="selector-tag">admin</span>数据库</span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">admin</span></span><br><span class="line">#创建账号及指定权限</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;</span><br><span class="line">  <span class="attribute">user</span>: <span class="string">"adminRoot"</span>,</span><br><span class="line">  <span class="attribute">pwd</span>: <span class="string">"adminbear"</span>,</span><br><span class="line">     <span class="attribute">roles</span>: [</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"root"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;,</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"clusterAdmin"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;,</span><br><span class="line">         &#123; <span class="attribute">role</span>: <span class="string">"userAdmin"</span>, <span class="attribute">db</span>: <span class="string">"admin"</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据库用户</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#登录<span class="selector-tag">mongos</span>路由服务器</span><br><span class="line">/<span class="selector-tag">usr</span>/<span class="selector-tag">bin</span>/<span class="selector-tag">mongo</span> <span class="selector-tag">127</span><span class="selector-class">.0</span><span class="selector-class">.0</span><span class="selector-class">.1</span><span class="selector-pseudo">:20001</span></span><br><span class="line">#以下是为数据库名<span class="selector-tag">mongoTest</span>，创建数据库用户</span><br><span class="line"><span class="selector-tag">use</span> <span class="selector-tag">mongoTest</span>;</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.createUser</span>(&#123;</span><br><span class="line">  <span class="attribute">user</span>: <span class="string">"mongoTestUser"</span>,</span><br><span class="line">  <span class="attribute">pwd</span>: <span class="string">"bear"</span>,</span><br><span class="line">  <span class="attribute">roles</span>: [</span><br><span class="line">      &#123; <span class="attribute">role</span>: <span class="string">"readWrite"</span>, <span class="attribute">db</span>: <span class="string">" mongoTest"</span> &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>目前配置服务、路由服务、分片服务、副本集服务都已经串联起来了，但我们的目的是希望插入数据，数据能够自动分片。连接在mongos上，准备让指定的数据库、指定的集合分片生效。</p>
+</li>
+</ul>
+</li>
+<li><p>创建数据库，让指定数据库分片生效</p>
+<ol>
+<li><p>建库、表、指定应用分片的库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#登录mongos路由服务器</span></span><br><span class="line">/usr/bin/mongo 127.0.0.1:20001</span><br><span class="line"><span class="comment">#创建或者使用mongoTest数据库</span></span><br><span class="line"><span class="keyword">use</span> mongoTest;</span><br><span class="line"><span class="comment">#创建mongoTest数据库中的集合</span></span><br><span class="line">db.createCollection("table1")  <span class="comment">#新建集合：table1</span></span><br><span class="line"> ·</span><br><span class="line"> ·</span><br><span class="line"> ·</span><br><span class="line"><span class="comment">#切换到admin数据库</span></span><br><span class="line"><span class="keyword">use</span> <span class="keyword">admin</span></span><br><span class="line"><span class="comment">#指定testdb分片生效，mongoTest为数据库名称</span></span><br><span class="line">db.runCommand( &#123; enablesharding :<span class="string">"mongoTest"</span>&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定分片的表。两种分片方式： Hashed Shard Key与Ranged Shard Key</p>
+<ul>
+<li><p>Hashed Shard Key：它采用字段的索引哈希值作为 shard key 的取值，这样做可以保证数据的均匀分布。在 mongos 和各个 shard 集群之间存在一个哈希值计算方法，所有的数据在迁移时都是根据这个方法来计算数据应当被迁移到什么地方。当 mongos 接收到一条语句时，通常他会把这条语句广播到所有的 shard 上去执行。</p>
+</li>
+<li><p>Ranged Shard Key: 根据 shard key 的取值，它把数据切分成连续的几个区间。取值相近的纪录会放进同一个 shard 服务器。好处是查询连续取值纪录时，查询效率可以得到保证。当数据库查询语句发送到 mongos 中时，mongos 会很快的找到目标 shard，而且不需要将语句发送到所有的 shard 上，一般只需要少量的 shard 就可以完成查询操作。缺点是不能保证数据的平均分配，在数据插入和修改时会产生比较严重的性能瓶颈</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#指定数据库里需要分片的集合和片键，<span class="selector-tag">table1</span>为<span class="selector-tag">mongoTest</span>数据库中集合名称</span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.runCommand</span>(&#123;<span class="attribute">shardcollection</span>:<span class="string">"mongoTest.table1"</span>,<span class="attribute">key</span>:&#123;<span class="string">"ZZJGDM"</span>: <span class="string">"hashed"</span>&#125;&#125;) <span class="comment">//Hashed Shard Key</span></span><br><span class="line"><span class="selector-tag">db</span><span class="selector-class">.runCommand</span>(&#123;<span class="attribute">shardcollection</span>:<span class="string">"mongoTest.table1"</span>,<span class="attribute">key</span>:&#123;<span class="attribute">_id</span>:<span class="number">1</span>&#125;&#125;)<span class="comment">//    Ranged Shard Key</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mongo%E9%9B%86%E7%BE%A4/" rel="tag"># mongo集群</a>
+          
+            <a href="/tags/%E9%83%A8%E7%BD%B2/" rel="tag"># 部署</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/30/linux/" rel="next" title="linux的一些零星记录">
+                <i class="fa fa-chevron-left"></i> linux的一些零星记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/" rel="prev" title="war包部署spring cloud 工程">
+                war包部署spring cloud 工程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NzMxOS8yMzgxOQ"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/lynne.jpg"
+                alt="song" />
+            
+              <p class="site-author-name" itemprop="name">song</p>
+              <p class="site-description motion-element" itemprop="description">其实人跟树是一样的，<br/>越是向往高处的阳光，<br/>它的根就越要伸向黑暗的地底</p>
+          </div>
+
+          <!--my custom code begin-->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+          <script type="text/javascript">
+            $("#sidebar").hover(function(){
+              $("#mydivshow").velocity('stop').velocity({opacity: 1});
+            },function(){
+              $("#mydivshow").velocity('stop').velocity({opacity: 0});
+            });
+          </script>
+
+          <div id="mydivshow" class="mydivshow">
+          <!--my custom code end-->
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#mongoDB安装"><span class="nav-number">1.</span> <span class="nav-text">mongoDB安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#配置yum管理包"><span class="nav-number">1.1.</span> <span class="nav-text">配置yum管理包</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高可用性的mongo集群"><span class="nav-number">2.</span> <span class="nav-text">高可用性的mongo集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#三台服务器分配"><span class="nav-number">2.1.</span> <span class="nav-text">三台服务器分配</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动Config-server"><span class="nav-number">2.2.</span> <span class="nav-text">启动Config server</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动Shard-server（分片服务）"><span class="nav-number">2.3.</span> <span class="nav-text">启动Shard server（分片服务）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#启动mongos路由服务"><span class="nav-number">2.4.</span> <span class="nav-text">启动mongos路由服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#整合配置、路由、分片服务器"><span class="nav-number">2.5.</span> <span class="nav-text">整合配置、路由、分片服务器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">song</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共9.5k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('-1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("XLxIUd7wtq0rfXy6FvU9AAY8-gzGzoHsz", "D5YF99tIlrm0klJp14kFeIzC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+  +  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+  +  <script>
+  +  $("body").backstretch("https://背景图.jpg");
+  +  </script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7}});</script></body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
