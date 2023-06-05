@@ -91,20 +91,20 @@
 <meta name="description" content="行为型模式 通过类继承或者对象组合来划分类与对象的职责，从而应对需求变化为多个交互的对象的冲击  行为型型模式分类一共有7种：模板方法模式、命令模式、访问者模式、迭代器模式、观察者模式、中介者模式、备忘录模式、解释器模式、状态模式、策略模式、职责链模式 模板方法模式 定义：定义一个操作中的算法的骨架（稳定），而将一些步骤延迟（变化）到子类。Template Method使得子类既可以不改变（复用）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="设计模式-行为型模式（第4篇）">
-<meta property="og:url" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/index.html">
+<meta property="og:url" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/index.html">
 <meta property="og:site_name" content="Mr.He&#39; BLOG">
 <meta property="og:description" content="行为型模式 通过类继承或者对象组合来划分类与对象的职责，从而应对需求变化为多个交互的对象的冲击  行为型型模式分类一共有7种：模板方法模式、命令模式、访问者模式、迭代器模式、观察者模式、中介者模式、备忘录模式、解释器模式、状态模式、策略模式、职责链模式 模板方法模式 定义：定义一个操作中的算法的骨架（稳定），而将一些步骤延迟（变化）到子类。Template Method使得子类既可以不改变（复用）">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015103831904.png">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015104809193.png">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015110528240.png">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015111939215.png">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120058046.png">
-<meta property="og:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120247286.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015103831904.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015104809193.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015110528240.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015111939215.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120058046.png">
+<meta property="og:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015120247286.png">
 <meta property="article:published_time" content="2021-10-15T02:27:04.000Z">
-<meta property="article:modified_time" content="2023-06-04T06:55:44.425Z">
+<meta property="article:modified_time" content="2021-10-14T16:00:00.000Z">
 <meta property="article:author" content="song">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015103831904.png">
+<meta name="twitter:image" content="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/image-20211015103831904.png">
 
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <link rel="canonical" href="http://blog.hexiaosong.xyz/2021/10/15/设计模式-行为型模式（第4篇）/"/>
+  <link rel="canonical" href="http://music.singasoong.xyz/2021/10/15/设计模式-行为型模式（第4篇）/"/>
 
 
 
@@ -311,7 +311,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.hexiaosong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="http://music.singasoong.xyz/2021/10/15/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC4%E7%AF%87%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="song">
@@ -356,8 +356,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-04T14:55:44+08:00">
-                2023-06-04
+              <time title="更新于" itemprop="dateModified" datetime="2021-10-15T00:00:00+08:00">
+                2021-10-15
               </time>
             
           </span>

@@ -71,11 +71,30 @@
 ]]></content>
   </entry>
   <entry>
-    <title>初入Hexo</title>
-    <url>/2019/10/29/hello-world/</url>
-    <content><![CDATA[]]></content>
+    <title>Openwrt + Tplink ACAP deploy</title>
+    <url>/2023/06/04/Openwrt-Tplink-ACAP-deploy/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>最近想把家里网络升级一下 于是购置了一套Tplink APAC 组网设备<br>家里已有网络环境 光纤入户-&gt; 一台N3540主路由（拨号&amp;DHCP）-&gt; Redmi AC2100(桥接&amp; 提供wifi)<br>主路由 192.168.100.1</p>
+</blockquote>
+<h2 id="组网"><a href="#组网" class="headerlink" title="组网"></a>组网</h2><p>需求： </p>
+<ol>
+<li>家里所有设备在同一网段，正常上网（包括科学上网）</li>
+<li>商云App可以查看AP状态与管理所有AP</li>
+</ol>
+<h3 id="方案一：TP-Link-作为二级路由"><a href="#方案一：TP-Link-作为二级路由" class="headerlink" title="方案一：TP-Link 作为二级路由"></a>方案一：TP-Link 作为二级路由</h3><p>N3540仍然做主路由，Lan口接AC交换机的Wan口，AC Wan口自动获取Ip 或者静态IP都可，Lan口开启DHCP。<br>优点：该方案是可用的，商云APP可以正常发现并管理AP设备，配置简单现有网络基础上不需要做太多的变化，只需替换原来的Redmi 路由器即可<br>缺点：不满足我的需求1，主路由与AP不在同一网段。多一级路由对网络传输会有损耗也增加了网络的复杂度<br>总结：该方案不推荐</p>
+<h3 id="方案二：TP-Link-AC-仅作为交换机使用"><a href="#方案二：TP-Link-AC-仅作为交换机使用" class="headerlink" title="方案二：TP-Link AC 仅作为交换机使用"></a>方案二：TP-Link AC 仅作为交换机使用</h3><p>AC交换机先不接上游网络（Wan先不接线）Lan口连接所有AP,通过wifi或者网线设置AC,AC Wan口可不做设置或设置自动获取IP，AC Lan口设置静态IP（与主路由保持同一网段如：192.168.100.233）并关闭DHCP服务。N3540仍然做主路由，最后N3540Lan口接AC交换机的Lan口。<br>优点：整个网络只有主路由提供DHCP服务，所以所有设备均在同一网段，且所有设备能正常上网并跑满带宽<br>缺点：由于AC Wan口没有使用仅作为交换机，所有没有接入互联网不能使用商云APP(咨询了客服是这样解释的)也就不能通过商云app 管理AP,但是可以通过AC IP(192.168.100.233)进入网页UI进行查看网络情况<br>总结：方案可行，没有强迫症对商云APP没有执念可以尝试</p>
+<h3 id="方案三：N3540做旁路由（也叫旁路网关）"><a href="#方案三：N3540做旁路由（也叫旁路网关）" class="headerlink" title="方案三：N3540做旁路由（也叫旁路网关）"></a>方案三：N3540做旁路由（也叫旁路网关）</h3><p>经过前面两种方案的尝试，方案都并不完美，最终通过一番搜索与学习，最终决定将主路由用作旁路由，AC升级作为主路由。<br>首先光猫网线出来直接接入ACWan口，进入路由器控制中心Wan口输入账号密码进行拨号,Lan口设置静态IP(如：192.168.100.233),开启DHCP.<br>image.png<br>N3540做旁路由Lan口接入AC Lan口，修改设置：</p>
+<ol>
+<li>Lan口选择静态地址（与AC主路由保持网段一致，如192.168.100.1）；网关设置成AC 主路由地址（192.168.100.233）这很重要。</li>
+<li>Lan口关闭DHCP服务</li>
+<li>进入防火墙，修改Lan 防火墙设置，勾选“IP 动态伪装”<br>至此N3540设置完毕。至此N3540仅作为一个网络设备不会对整个网络有任何影响。连接APwifi 手机等设备也能正常上网，但是还不能科学上网。还要进行一部配置，将联网设备的网关指向旁路由。该配置有两种方式：非侵入式与侵入式</li>
+<li>非侵入式：联网设备进行联网配置，自动获取IP改为手动设置 需要特殊注意的是将网关配置成旁路由IP（即192.168.100.1）重新连接后即可上网。该方案优点就是可以控制哪些设备需要经旁路由。缺点就是比较麻烦 每个需要科学上网的设备都需要手动配置，</li>
+<li>侵入式：基于上面一种方案，该方案是将该配置通过DHCP下发给所有联网设备，在AC Lan口的DHCP配置中填入旁路由IP（即192.168.100.1）所有设备重新联网即可。该方案也有缺点，有侵入性，如果旁路由挂掉 整个网络即瘫痪（该场景应该很少）<br>至此所有配置完成。<br>优点：满足我的两点基本需求。所有设备正常上网，跑满带宽。商云APP 正常发现并管理AP设备<br>缺点：配置稍微麻烦一点<br>总结：目前是我的最佳解决方案，推荐。如果后续有方案变更再做更新。有小伙伴有更好的方式可进行讨论分享[emoji:抱拳]</li>
+</ol>
+]]></content>
       <categories>
-        <category>博客搭建</category>
+        <category>网络</category>
+        <category>家庭组网</category>
       </categories>
   </entry>
   <entry>
@@ -181,6 +200,14 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
         <tag>linux</tag>
         <tag>命令归档</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>初入Hexo</title>
+    <url>/2019/10/29/hello-world/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>博客搭建</category>
+      </categories>
   </entry>
   <entry>
     <title>linux下java环境部署</title>
@@ -298,30 +325,6 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
       <tags>
         <tag>SSH免密登录</tag>
         <tag>小技巧</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>war包部署spring cloud 工程</title>
-    <url>/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/</url>
-    <content><![CDATA[<p>最近接到一个任务：将spring cloud架构的系统部署到国产中间件：apusic(金蝶)中去。</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于之前完全没有接触过这个中间件，第一个想到的就是不用springboot 自带的tomcat，将服务器打成war包部署到外部tomcat中去。部署成功后再将他搬到apusic(当时想的是毕竟GC，操作应该大同小异)。</p>
-<p>于是就开始了下面的操作:</p>
-<blockquote>
-<p>项目是gradle构建</p>
-</blockquote>
-<h3 id="更改build-gradle将springboot-服务打包成war"><a href="#更改build-gradle将springboot-服务打包成war" class="headerlink" title="更改build.gradle将springboot 服务打包成war"></a>更改build.gradle将springboot 服务打包成war</h3><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line">apply plugin: <span class="string">'org.springframework.boot'</span></span><br><span class="line">apply plugin: <span class="string">'eclipse'</span></span><br><span class="line">apply plugin: <span class="string">'net.saliman.properties'</span></span><br><span class="line">apply plugin: <span class="string">'io.spring.dependency-management'</span></span><br><span class="line">apply plugin: <span class="string">'war'</span> # 引入war插件</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    # 由于用外部tomcat启动 去掉继承的tomcat</span><br><span class="line">    providedRuntime <span class="string">'org.springframework.boot:spring-boot-starter-tomcat'</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法"><a href="#新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法" class="headerlink" title="新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法"></a>新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: hesong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Describe</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2019/10/21 18:17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MCStartApplication</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> builder.sources(ManagementCenterApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a href="file:///C:/Users/76797/Desktop/AAS-V9.0-201905221217/docs/html/guide/ch69s06.html">金蝶部署参考文档</a></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jps |grep Bootstrap | awk '&#123;print $1&#125;' | xargs kill -s 9</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>工作与技术</category>
-      </categories>
-      <tags>
-        <tag>spring boot</tag>
-        <tag>war包部署</tag>
       </tags>
   </entry>
   <entry>
@@ -445,6 +448,30 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
       </tags>
   </entry>
   <entry>
+    <title>war包部署spring cloud 工程</title>
+    <url>/2019/11/07/war%E5%8C%85%E9%83%A8%E7%BD%B2spring-cloud-%E5%B7%A5%E7%A8%8B/</url>
+    <content><![CDATA[<p>最近接到一个任务：将spring cloud架构的系统部署到国产中间件：apusic(金蝶)中去。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>由于之前完全没有接触过这个中间件，第一个想到的就是不用springboot 自带的tomcat，将服务器打成war包部署到外部tomcat中去。部署成功后再将他搬到apusic(当时想的是毕竟GC，操作应该大同小异)。</p>
+<p>于是就开始了下面的操作:</p>
+<blockquote>
+<p>项目是gradle构建</p>
+</blockquote>
+<h3 id="更改build-gradle将springboot-服务打包成war"><a href="#更改build-gradle将springboot-服务打包成war" class="headerlink" title="更改build.gradle将springboot 服务打包成war"></a>更改build.gradle将springboot 服务打包成war</h3><figure class="highlight gradle"><table><tr><td class="code"><pre><span class="line">apply plugin: <span class="string">'java'</span></span><br><span class="line">apply plugin: <span class="string">'org.springframework.boot'</span></span><br><span class="line">apply plugin: <span class="string">'eclipse'</span></span><br><span class="line">apply plugin: <span class="string">'net.saliman.properties'</span></span><br><span class="line">apply plugin: <span class="string">'io.spring.dependency-management'</span></span><br><span class="line">apply plugin: <span class="string">'war'</span> # 引入war插件</span><br><span class="line"></span><br><span class="line"><span class="keyword">dependencies</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    # 由于用外部tomcat启动 去掉继承的tomcat</span><br><span class="line">    providedRuntime <span class="string">'org.springframework.boot:spring-boot-starter-tomcat'</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法"><a href="#新增一个启动配置类继承SpringBootServletInitializer-接口，重写configure方法" class="headerlink" title="新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法"></a>新增一个启动配置类继承SpringBootServletInitializer 接口，重写configure方法</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: hesong</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Describe</span>:</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2019/10/21 18:17</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MCStartApplication</span> <span class="keyword">extends</span> <span class="title">SpringBootServletInitializer</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> SpringApplicationBuilder <span class="title">configure</span><span class="params">(SpringApplicationBuilder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> builder.sources(ManagementCenterApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="file:///C:/Users/76797/Desktop/AAS-V9.0-201905221217/docs/html/guide/ch69s06.html">金蝶部署参考文档</a></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">jps |grep Bootstrap | awk '&#123;print $1&#125;' | xargs kill -s 9</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+      </categories>
+      <tags>
+        <tag>spring boot</tag>
+        <tag>war包部署</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>设计模式-概览与分类（第1篇）</title>
     <url>/2020/05/03/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E6%A6%82%E8%A7%88%E4%B8%8E%E5%88%86%E7%B1%BB%EF%BC%88%E7%AC%AC1%E7%AF%87%EF%BC%89/</url>
     <content><![CDATA[<h2 id="设计模式的七大设计原则"><a href="#设计模式的七大设计原则" class="headerlink" title="设计模式的七大设计原则"></a>设计模式的七大设计原则</h2><ol>
@@ -501,43 +528,6 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
       </tags>
   </entry>
   <entry>
-    <title>设计模式-类图（第0篇）</title>
-    <url>/2020/05/03/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%B1%BB%E5%9B%BE%EF%BC%88%E7%AC%AC0%E7%AF%87%EF%BC%89/</url>
-    <content><![CDATA[<h2 id="类图六大关系"><a href="#类图六大关系" class="headerlink" title="类图六大关系"></a>类图六大关系</h2><p>类与类之间的关系分为六种：</p>
-<ul>
-<li>依赖（Dependence）</li>
-<li>泛化/继承（Generalization）</li>
-<li>实现（Implementation）</li>
-<li>关联（Association）</li>
-<li>聚合（Aggregation）</li>
-<li>组合（Composition）</li>
-</ul>
-<h3 id="依赖关系（Dependence）"><a href="#依赖关系（Dependence）" class="headerlink" title="依赖关系（Dependence）"></a>依赖关系（Dependence）</h3><p>只要类中用到了对方即构成依赖关系。</p>
-<ul>
-<li>类的成员属性</li>
-<li>方法的返回类型</li>
-<li>方法接收的参数类型</li>
-<li>方法内部使用到</li>
-</ul>
-<h3 id="泛化关系（Generalization）"><a href="#泛化关系（Generalization）" class="headerlink" title="泛化关系（Generalization）"></a>泛化关系（Generalization）</h3><p>泛化关系其实就继承关系，它是依赖关系的特例</p>
-<h3 id="实现关系（Implementation）"><a href="#实现关系（Implementation）" class="headerlink" title="实现关系（Implementation）"></a>实现关系（Implementation）</h3><p>实际上就是A类实现B类，实现关系是依赖关系的特例</p>
-<h3 id="关联关系（Association）"><a href="#关联关系（Association）" class="headerlink" title="关联关系（Association）"></a>关联关系（Association）</h3><p>关联关系实际是 <strong><em>类与类之间的联系，他是依赖关系的特例</em></strong></p>
-<p>特点： 具有导航性：即单向关系与双向关系<br>具有多重性： 0 ， 1 ， *</p>
-<h3 id="聚合关系（Aggregation）"><a href="#聚合关系（Aggregation）" class="headerlink" title="聚合关系（Aggregation）"></a>聚合关系（Aggregation）</h3><p>聚合关系表示整体与部分的关系，<strong><em>部分可以与整体分开</em></strong>。<br>聚合关系是关联关系的特例,因此也具有导航性与多重性</p>
-<p>eg: person 与 IDCard 的关系</p>
-<h3 id="组合关系（Composition）"><a href="#组合关系（Composition）" class="headerlink" title="组合关系（Composition）"></a>组合关系（Composition）</h3><p>也是整体与部分的关系，只是<strong><em>整体与部分不可分开</em></strong></p>
-<p>eg: person 与 head 的关系</p>
-]]></content>
-      <categories>
-        <category>工作与技术</category>
-        <category>设计模式</category>
-      </categories>
-      <tags>
-        <tag>DesignPattern</tag>
-        <tag>类图</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>设计模式-结构型模式（第3篇）</title>
     <url>/2021/10/14/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F%EF%BC%88%E7%AC%AC3%E7%AF%87%EF%BC%89/</url>
     <content><![CDATA[<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><blockquote>
@@ -583,6 +573,43 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
         <category>工作与技术</category>
         <category>设计模式</category>
       </categories>
+  </entry>
+  <entry>
+    <title>设计模式-类图（第0篇）</title>
+    <url>/2020/05/03/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E7%B1%BB%E5%9B%BE%EF%BC%88%E7%AC%AC0%E7%AF%87%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="类图六大关系"><a href="#类图六大关系" class="headerlink" title="类图六大关系"></a>类图六大关系</h2><p>类与类之间的关系分为六种：</p>
+<ul>
+<li>依赖（Dependence）</li>
+<li>泛化/继承（Generalization）</li>
+<li>实现（Implementation）</li>
+<li>关联（Association）</li>
+<li>聚合（Aggregation）</li>
+<li>组合（Composition）</li>
+</ul>
+<h3 id="依赖关系（Dependence）"><a href="#依赖关系（Dependence）" class="headerlink" title="依赖关系（Dependence）"></a>依赖关系（Dependence）</h3><p>只要类中用到了对方即构成依赖关系。</p>
+<ul>
+<li>类的成员属性</li>
+<li>方法的返回类型</li>
+<li>方法接收的参数类型</li>
+<li>方法内部使用到</li>
+</ul>
+<h3 id="泛化关系（Generalization）"><a href="#泛化关系（Generalization）" class="headerlink" title="泛化关系（Generalization）"></a>泛化关系（Generalization）</h3><p>泛化关系其实就继承关系，它是依赖关系的特例</p>
+<h3 id="实现关系（Implementation）"><a href="#实现关系（Implementation）" class="headerlink" title="实现关系（Implementation）"></a>实现关系（Implementation）</h3><p>实际上就是A类实现B类，实现关系是依赖关系的特例</p>
+<h3 id="关联关系（Association）"><a href="#关联关系（Association）" class="headerlink" title="关联关系（Association）"></a>关联关系（Association）</h3><p>关联关系实际是 <strong><em>类与类之间的联系，他是依赖关系的特例</em></strong></p>
+<p>特点： 具有导航性：即单向关系与双向关系<br>具有多重性： 0 ， 1 ， *</p>
+<h3 id="聚合关系（Aggregation）"><a href="#聚合关系（Aggregation）" class="headerlink" title="聚合关系（Aggregation）"></a>聚合关系（Aggregation）</h3><p>聚合关系表示整体与部分的关系，<strong><em>部分可以与整体分开</em></strong>。<br>聚合关系是关联关系的特例,因此也具有导航性与多重性</p>
+<p>eg: person 与 IDCard 的关系</p>
+<h3 id="组合关系（Composition）"><a href="#组合关系（Composition）" class="headerlink" title="组合关系（Composition）"></a>组合关系（Composition）</h3><p>也是整体与部分的关系，只是<strong><em>整体与部分不可分开</em></strong></p>
+<p>eg: person 与 head 的关系</p>
+]]></content>
+      <categories>
+        <category>工作与技术</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>DesignPattern</tag>
+        <tag>类图</tag>
+      </tags>
   </entry>
   <entry>
     <title>设计模式-行为型模式（第4篇）</title>
@@ -872,32 +899,5 @@ date -d &apos;@1526973325&apos;   //将时间戳转换为时间</code></pre><h4 
         <tag>mongo集群</tag>
         <tag>部署</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Openwrt + Tplink ACAP deploy</title>
-    <url>/2023/06/04/Openwrt-Tplink-ACAP-deploy/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
-<p>最近想把家里网络升级一下 于是购置了一套Tplink APAC 组网设备<br>家里已有网络环境 光纤入户-&gt; 一台N3540主路由（拨号&amp;DHCP）-&gt; Redmi AC2100(桥接&amp; 提供wifi)<br>主路由 192.168.100.1</p>
-</blockquote>
-<h2 id="组网"><a href="#组网" class="headerlink" title="组网"></a>组网</h2><p>需求： </p>
-<ol>
-<li>家里所有设备在同一网段，正常上网（包括科学上网）</li>
-<li>商云App可以查看AP状态与管理所有AP</li>
-</ol>
-<h3 id="方案一：TP-Link-作为二级路由"><a href="#方案一：TP-Link-作为二级路由" class="headerlink" title="方案一：TP-Link 作为二级路由"></a>方案一：TP-Link 作为二级路由</h3><p>N3540仍然做主路由，Lan口接AC交换机的Wan口，AC Wan口自动获取Ip 或者静态IP都可，Lan口开启DHCP。<br>优点：该方案是可用的，商云APP可以正常发现并管理AP设备，配置简单现有网络基础上不需要做太多的变化，只需替换原来的Redmi 路由器即可<br>缺点：不满足我的需求1，主路由与AP不在同一网段。多一级路由对网络传输会有损耗也增加了网络的复杂度<br>总结：该方案不推荐</p>
-<h3 id="方案二：TP-Link-AC-仅作为交换机使用"><a href="#方案二：TP-Link-AC-仅作为交换机使用" class="headerlink" title="方案二：TP-Link AC 仅作为交换机使用"></a>方案二：TP-Link AC 仅作为交换机使用</h3><p>AC交换机先不接上游网络（Wan先不接线）Lan口连接所有AP,通过wifi或者网线设置AC,AC Wan口可不做设置或设置自动获取IP，AC Lan口设置静态IP（与主路由保持同一网段如：192.168.100.233）并关闭DHCP服务。N3540仍然做主路由，最后N3540Lan口接AC交换机的Lan口。<br>优点：整个网络只有主路由提供DHCP服务，所以所有设备均在同一网段，且所有设备能正常上网并跑满带宽<br>缺点：由于AC Wan口没有使用仅作为交换机，所有没有接入互联网不能使用商云APP(咨询了客服是这样解释的)也就不能通过商云app 管理AP,但是可以通过AC IP(192.168.100.233)进入网页UI进行查看网络情况<br>总结：方案可行，没有强迫症对商云APP没有执念可以尝试</p>
-<h3 id="方案三：N3540做旁路由（也叫旁路网关）"><a href="#方案三：N3540做旁路由（也叫旁路网关）" class="headerlink" title="方案三：N3540做旁路由（也叫旁路网关）"></a>方案三：N3540做旁路由（也叫旁路网关）</h3><p>经过前面两种方案的尝试，方案都并不完美，最终通过一番搜索与学习，最终决定将主路由用作旁路由，AC升级作为主路由。<br>首先光猫网线出来直接接入ACWan口，进入路由器控制中心Wan口输入账号密码进行拨号,Lan口设置静态IP(如：192.168.100.233),开启DHCP.<br>image.png<br>N3540做旁路由Lan口接入AC Lan口，修改设置：</p>
-<ol>
-<li>Lan口选择静态地址（与AC主路由保持网段一致，如192.168.100.1）；网关设置成AC 主路由地址（192.168.100.233）这很重要。</li>
-<li>Lan口关闭DHCP服务</li>
-<li>进入防火墙，修改Lan 防火墙设置，勾选“IP 动态伪装”<br>至此N3540设置完毕。至此N3540仅作为一个网络设备不会对整个网络有任何影响。连接APwifi 手机等设备也能正常上网，但是还不能科学上网。还要进行一部配置，将联网设备的网关指向旁路由。该配置有两种方式：非侵入式与侵入式</li>
-<li>非侵入式：联网设备进行联网配置，自动获取IP改为手动设置 需要特殊注意的是将网关配置成旁路由IP（即192.168.100.1）重新连接后即可上网。该方案优点就是可以控制哪些设备需要经旁路由。缺点就是比较麻烦 每个需要科学上网的设备都需要手动配置，</li>
-<li>侵入式：基于上面一种方案，该方案是将该配置通过DHCP下发给所有联网设备，在AC Lan口的DHCP配置中填入旁路由IP（即192.168.100.1）所有设备重新联网即可。该方案也有缺点，有侵入性，如果旁路由挂掉 整个网络即瘫痪（该场景应该很少）<br>至此所有配置完成。<br>优点：满足我的两点基本需求。所有设备正常上网，跑满带宽。商云APP 正常发现并管理AP设备<br>缺点：配置稍微麻烦一点<br>总结：目前是我的最佳解决方案，推荐。如果后续有方案变更再做更新。有小伙伴有更好的方式可进行讨论分享[emoji:抱拳]</li>
-</ol>
-]]></content>
-      <categories>
-        <category>网络</category>
-        <category>家庭组网</category>
-      </categories>
   </entry>
 </search>
